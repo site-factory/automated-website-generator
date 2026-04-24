@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const data = await request.json();
     
     // Use a static require so Vercel's bundler correctly traces and includes it
-    const { generateDemo } = require('../../../../../scripts/repo-factory');
+    const { generateDemo } = require('../../../../scripts/repo-factory');
 
     const result = await generateDemo(data);
     const finalDemoUrl = result.pagesUrl || `/demos/${result.demoId}`;

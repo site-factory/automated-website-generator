@@ -1,10 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    outputFileTracingIncludes: {
-      '/api/generate': ['./templates/**/*'],
-    },
+  outputFileTracingIncludes: {
+    '/api/generate': ['./templates/**/*'],
   },
 };
 
