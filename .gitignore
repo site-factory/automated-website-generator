@@ -18,7 +18,7 @@ frontend/.env
 frontend/.env.local
 
 # Demos generated locally
-demos/
+/demos/
 
 # Logs
 npm-debug.log*
