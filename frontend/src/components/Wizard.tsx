@@ -186,7 +186,7 @@ export default function Wizard() {
 
       if (data.success) {
         setProgressLogs(prev => [...prev, '[OK]  Repository provisioned successfully']);
-        setProgressLogs(prev => [...prev, `[OK]  Injecting brand color ${formData.activeColor}...`]);
+        setProgressLogs(prev => [...prev, `[OK]  Injecting brand palette ${formData.activePalette?.name || 'default'}...`]);
         if (formData.logoUrl) {
            setProgressLogs(prev => [...prev, '[OK]  Logo placed in /assets/brand-logo']);
         }
