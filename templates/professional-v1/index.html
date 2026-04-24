@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{COMPANY_NAME}} | Professional Services</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <img src="assets/brand-logo.png" alt="{{COMPANY_NAME}} Logo" class="logo" onerror="this.src='https://via.placeholder.com/150x50?text={{COMPANY_NAME}}'">
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="#services">Services</a>
+                <a href="about.html">About</a>
+                <a href="contact.html" class="btn">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container animate-up">
+            <h1>Elite Solutions for <br><span class="highlight">{{COMPANY_NAME}}</span></h1>
+            <p class="lead">{{HERO_SUBTEXT}}</p>
+            <div class="cta-group">
+                <a href="#contact" class="btn btn-primary">Book a Consultation</a>
+                <a href="#services" class="btn btn-outline">Our Services</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">What We Offer</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <h3>Strategic Consulting</h3>
+                    <p>Expert guidance tailored to the unique goals of {{COMPANY_NAME}}.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Digital Transformation</h3>
+                    <p>Modernizing your workflow with cutting-edge technology.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Market Analysis</h3>
+                    <p>Data-driven insights to keep you ahead of the competition.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 {{COMPANY_NAME}}. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

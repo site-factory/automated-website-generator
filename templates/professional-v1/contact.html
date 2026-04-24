@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | {{COMPANY_NAME}}</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <img src="assets/brand-logo.png" alt="{{COMPANY_NAME}} Logo" class="logo" onerror="this.src='https://via.placeholder.com/150x50?text={{COMPANY_NAME}}'">
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#services">Services</a>
+                <a href="about.html">About</a>
+                <a href="contact.html" class="btn">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container animate-up">
+            <h1>Get in <span class="highlight">Touch</span></h1>
+            <p class="lead">Ready to transform your business? Let's talk.</p>
+        </div>
+    </header>
+
+    <section class="contact-section">
+        <div class="container flex-row">
+            <div class="contact-info">
+                <h3>Contact Information</h3>
+                <p><strong>Email:</strong> info@{{COMPANY_NAME_SLUG}}.com</p>
+                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                <p><strong>Office:</strong> 123 Business Ave, Suite 100<br>Metropolis, NY 10001</p>
+            </div>
+            <div class="contact-form">
+                <form onsubmit="event.preventDefault(); alert('Message sent successfully!');">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea required class="form-control" rows="5"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; border:none; cursor:pointer;">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 {{COMPANY_NAME}}. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{COMPANY_NAME}} | Portfolio</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-text">{{COMPANY_NAME}}</div>
+            <div class="nav-links">
+                <a href="#work">Work</a>
+                <a href="#about">About</a>
+                <a href="#contact" class="btn">Hire Me</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container animate-up">
+            <p class="greeting">Hi, I'm {{COMPANY_NAME}}</p>
+            <h1>I build <span class="highlight">digital experiences</span> <br>that matter.</h1>
+            <p class="lead">{{HERO_SUBTEXT}}</p>
+        </div>
+    </header>
+
+    <section id="work" class="services">
+        <div class="container">
+            <h2 class="section-title">Selected Work</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="card-img" style="background-color: #2d2d2d; height: 250px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
+                    <h3>Project Alpha</h3>
+                    <p>UI/UX Design & Frontend Development</p>
+                </div>
+                <div class="service-card">
+                    <div class="card-img" style="background-color: #2d2d2d; height: 250px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
+                    <h3>Project Beta</h3>
+                    <p>Full-stack Web Application</p>
+                </div>
+                <div class="service-card">
+                    <div class="card-img" style="background-color: #2d2d2d; height: 250px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
+                    <h3>Project Gamma</h3>
+                    <p>Mobile App Design</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <h2>Let's build something together.</h2>
+            <a href="mailto:hello@example.com" class="footer-link">hello@example.com</a>
+            <p>&copy; 2026 {{COMPANY_NAME}}.</p>
+        </div>
+    </footer>
+</body>
+</html>
