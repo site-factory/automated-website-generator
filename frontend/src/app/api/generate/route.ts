@@ -5,10 +5,8 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
     
-    // In a Next.js App Router API route, requiring a file outside the frontend folder
-    // might be tricky in production, but for our prototype development it works.
-    const repoFactoryPath = path.join(process.cwd(), 'scripts', 'repo-factory.js');
-    const { generateDemo } = require(repoFactoryPath);
+    // Use a static require so Vercel's bundler correctly traces and includes it
+    const { generateDemo } = require('../../../../../scripts/repo-factory');
 
     const result = await generateDemo(data);
     const finalDemoUrl = result.pagesUrl || `/demos/${result.demoId}`;
