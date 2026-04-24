@@ -1,14 +1,15 @@
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const os = require('os');
 
 async function generateDemo(data) {
     const timestamp = Date.now();
-    // Convert camelCase to SNAKE_CASE for directory and ID creation
     const companyName = data.businessName || data.companyName || 'Demo Website';
     const demoId = companyName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + timestamp;
-    const workingDir = process.cwd().includes('frontend') ? path.join(process.cwd(), '..') : process.cwd();
-    const targetDir = path.join(workingDir, 'demos', demoId);
+    
+    // On Vercel, we can only write to /tmp.
+    const workingDir = process.cwd();
+    const targetDir = path.join(os.tmpdir(), 'demos', demoId);
     
     // Select template based on industry/layout
     let templateName = 'professional-v1';
@@ -20,9 +21,9 @@ async function generateDemo(data) {
 
     console.log('Generating demo: ' + demoId + ' using template: ' + templateName);
 
-    // 1. Create Demo Directory
-    if (!fs.existsSync(path.join(workingDir, 'demos'))) {
-        fs.mkdirSync(path.join(workingDir, 'demos'));
+    // 1. Create Demo Directory in /tmp
+    if (!fs.existsSync(path.join(os.tmpdir(), 'demos'))) {
+        fs.mkdirSync(path.join(os.tmpdir(), 'demos'), { recursive: true });
     }
     fs.mkdirSync(targetDir, { recursive: true });
 
@@ -141,19 +142,43 @@ async function deployToGithub(targetDir, repoName, token, orgName) {
         }
     }
 
-    // 2. Initialize Git, Commit, and Push
-    const remoteUrl = `https://${token}@github.com/${orgName}/${repoName}.git`;
+    // 2. Upload files via GitHub API (since Vercel doesn't have git installed)
+    const filesToUpload = [];
+    function readFilesRecursively(dir) {
+        const items = fs.readdirSync(dir);
+        for (const item of items) {
+            const fullPath = path.join(dir, item);
+            if (fs.statSync(fullPath).isDirectory()) {
+                readFilesRecursively(fullPath);
+            } else {
+                filesToUpload.push(fullPath);
+            }
+        }
+    }
     
-    // We use execSync to run git commands in the target directory
-    try {
-        execSync('git init', { cwd: targetDir, stdio: 'ignore' });
-        execSync('git add .', { cwd: targetDir, stdio: 'ignore' });
-        execSync('git commit -m "Initial commit by AI SiteSpark"', { cwd: targetDir, stdio: 'ignore' });
-        execSync('git branch -M main', { cwd: targetDir, stdio: 'ignore' });
-        execSync(`git remote add origin ${remoteUrl}`, { cwd: targetDir, stdio: 'ignore' });
-        execSync('git push -u origin main --force', { cwd: targetDir, stdio: 'ignore' });
-    } catch (e) {
-        throw new Error('Git commands failed. Is git installed and available in PATH?');
+    readFilesRecursively(targetDir);
+
+    for (const filePath of filesToUpload) {
+        const relativePath = path.relative(targetDir, filePath).replace(/\\/g, '/');
+        const contentBase64 = fs.readFileSync(filePath, { encoding: 'base64' });
+
+        const uploadRes = await fetch(`https://api.github.com/repos/${orgName}/${repoName}/contents/${relativePath}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: `Add ${relativePath} via AI SiteSpark`,
+                content: contentBase64,
+                branch: 'main'
+            })
+        });
+
+        if (!uploadRes.ok) {
+            console.error(`Failed to upload ${relativePath}`);
+        }
     }
 
     // 3. Enable GitHub Pages

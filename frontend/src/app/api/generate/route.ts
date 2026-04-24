@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     
     // In a Next.js App Router API route, requiring a file outside the frontend folder
     // might be tricky in production, but for our prototype development it works.
-    const repoFactoryPath = path.join(process.cwd(), '..', 'scripts', 'repo-factory.js');
+    const repoFactoryPath = path.join(process.cwd(), 'scripts', 'repo-factory.js');
     const { generateDemo } = require(repoFactoryPath);
 
     const result = await generateDemo(data);
