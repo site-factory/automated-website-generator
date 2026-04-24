@@ -1,5 +1,5 @@
-:root {
-    --primary-color: {{PRIMARY_COLOR}};
+﻿:root {
+    --primary:   {{PRIMARY_COLOR}};`n    --secondary: {{SECONDARY_COLOR}};`n    --accent:    {{ACCENT_COLOR}};`n    --bg-tint:   {{BG_TINT}};
     --text-dark: #111111;
     --text-light: #888888;
     --bg-light: #ffffff;
@@ -27,8 +27,8 @@ h1, h2, h3, .logo-text { font-family: 'Playfair Display', serif; }
 .nav-links { display: flex; flex-direction: column; gap: 1rem; align-items: center; text-align: center; }
 .nav-links a { text-decoration: none; color: var(--white); font-weight: 400; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; }
 .btn { padding: 0.75rem 1.5rem; border-radius: 0; text-decoration: none; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; transition: all 0.3s ease; display: inline-block; }
-.btn-primary { background: var(--primary-color); color: white; border: 1px solid var(--primary-color); }
-.btn-primary:hover { background: transparent; color: var(--primary-color); }
+.btn-primary { background: var(--primary); color: white; border: 1px solid var(--primary); }
+.btn-primary:hover { background: transparent; color: var(--primary); }
 
 @media (min-width: 768px) {
     .navbar { padding: 2rem 0; }
@@ -42,7 +42,7 @@ h1, h2, h3, .logo-text { font-family: 'Playfair Display', serif; }
 .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); }
 .hero .container { position: relative; z-index: 10; text-align: center; width: 100%; }
 .hero h1 { font-size: 3rem; margin-bottom: 1rem; font-weight: 400; line-height: 1.2; }
-.highlight { color: var(--primary-color); font-style: italic; }
+.highlight { color: var(--primary); font-style: italic; }
 .lead { font-size: 1rem; color: #dddddd; max-width: 500px; margin: 0 auto 2rem; font-family: 'Playfair Display', serif; font-style: italic; padding: 0 1rem; }
 
 @media (min-width: 768px) {
@@ -71,3 +71,4 @@ h1, h2, h3, .logo-text { font-family: 'Playfair Display', serif; }
 
 @keyframes up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 .animate-up { animation: up 1s ease forwards; }
+

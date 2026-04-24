@@ -5,6 +5,10 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
     
+    // Inject the base URL so the generator can construct the correct Claim CTA link
+    const requestUrl = new URL(request.url);
+    data.baseUrl = `${requestUrl.protocol}//${requestUrl.host}`;
+    
     // Use a static require so Vercel's bundler correctly traces and includes it
     const { generateDemo } = require('../../../../scripts/repo-factory');
 

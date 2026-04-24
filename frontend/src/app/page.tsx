@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 import Wizard from '@/components/Wizard';
 import { Brain } from 'lucide-react';
 
@@ -17,17 +18,16 @@ export default function Home() {
           <span className="text-[1.35rem] font-bold tracking-wide text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">AI SiteSpark</span>
         </div>
         <div className="hidden md:flex gap-10 text-[0.95rem] font-medium text-[#a1a3ab]">
-          <a href="#" className="hover:text-white transition-colors">Features</a>
-          <a href="#" className="hover:text-white transition-colors">Pricing</a>
-          <a href="#" className="hover:text-white transition-colors">Demos</a>
-          <a href="#" className="hover:text-white transition-colors">Contact</a>
+          <Link href="/features" className="hover:text-white transition-colors">Features</Link>
+          <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+          <Link href="/demos" className="hover:text-white transition-colors">Demos</Link>
+          <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
         </div>
-        <button className="btn-cyan text-[0.95rem]">Get Started</button>
+        <Link href="/contact"><button className="btn-cyan text-[0.95rem]">Get Started</button></Link>
       </nav>
 
       {/* Hero Section */}
       <section className="text-center mt-10 sm:mt-16 md:mt-20 mb-10 sm:mb-16 z-10 w-full px-4">
-        <h3 className="text-[#a1a3ab] font-medium tracking-wider mb-4 sm:mb-6 text-[0.95rem] sm:text-[1.1rem]">AI SiteSpark</h3>
         <h1 className="text-[2.25rem] sm:text-[3.5rem] md:text-[4.5rem] font-bold text-white tracking-tight leading-[1.15]">
           Build Your Perfect Website<br className="hidden sm:inline" />{" "}in Minutes.
         </h1>

@@ -1,5 +1,5 @@
-:root {
-    --primary-color: {{PRIMARY_COLOR}};
+﻿:root {
+    --primary:   {{PRIMARY_COLOR}};`n    --secondary: {{SECONDARY_COLOR}};`n    --accent:    {{ACCENT_COLOR}};`n    --bg-tint:   {{BG_TINT}};
     --bg-dark: #0f0f11;
     --text-main: #ffffff;
     --text-muted: #888888;
@@ -24,7 +24,7 @@ body {
 .logo-text { font-weight: 700; font-size: 1.5rem; letter-spacing: -1px; }
 .nav-links { display: flex; flex-direction: column; gap: 1rem; align-items: center; }
 .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 500; font-size: 0.9rem; transition: color 0.2s; }
-.nav-links a:hover { color: var(--primary-color); }
+.nav-links a:hover { color: var(--primary); }
 .btn { padding: 0.6rem 1.2rem; border-radius: 4px; background: var(--text-main); color: var(--bg-dark) !important; transition: all 0.2s; display: inline-block; }
 .btn:hover { transform: scale(1.05); }
 
@@ -36,7 +36,7 @@ body {
 
 /* Hero - Mobile First */
 .hero { padding: 6rem 0 4rem; text-align: left; }
-.greeting { color: var(--primary-color); font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+.greeting { color: var(--primary); font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
 .hero h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -1px; }
 .highlight { -webkit-text-stroke: 1px var(--text-main); color: transparent; }
 .lead { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; font-weight: 300; }
@@ -53,7 +53,7 @@ body {
 .section-title { font-size: 2rem; margin-bottom: 2rem; letter-spacing: -0.5px; }
 .service-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
 .service-card { padding: 1.2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.3s; cursor: pointer; }
-.service-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
+.service-card:hover { transform: translateY(-5px); border-color: var(--primary); }
 .service-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; letter-spacing: -0.5px; }
 .service-card p { color: var(--text-muted); font-size: 0.9rem; }
 
@@ -69,7 +69,7 @@ body {
 /* Footer - Mobile First */
 .footer { padding: 4rem 0 3rem; text-align: center; }
 .footer h2 { font-size: 2rem; margin-bottom: 1rem; letter-spacing: -0.5px; }
-.footer-link { display: inline-block; font-size: 1.2rem; color: var(--primary-color); text-decoration: none; border-bottom: 2px solid var(--primary-color); margin-bottom: 3rem; transition: opacity 0.2s; word-break: break-all; }
+.footer-link { display: inline-block; font-size: 1.2rem; color: var(--primary); text-decoration: none; border-bottom: 2px solid var(--primary); margin-bottom: 3rem; transition: opacity 0.2s; word-break: break-all; }
 .footer-link:hover { opacity: 0.8; }
 .footer p { color: var(--text-muted); font-size: 0.8rem; }
 
@@ -82,3 +82,4 @@ body {
 
 @keyframes up { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 .animate-up { animation: up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+

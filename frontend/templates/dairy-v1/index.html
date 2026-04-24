@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{COMPANY_NAME}} | Dairy Products</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-text">{{COMPANY_NAME}}</div>
+            <div class="nav-links">
+                <a href="#products">Products</a>
+                <a href="#about">About Us</a>
+                <a href="#quality">Quality</a>
+                <a href="#contact" class="btn btn-primary">Order Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container animate-up">
+            <div class="hero-badge">🥛 Farm Fresh Since 1998</div>
+            <h1>Pure & Fresh from <span class="highlight">{{COMPANY_NAME}}</span></h1>
+            <p class="lead">{{HERO_SUBTEXT}}</p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary">Shop Products</a>
+                <a href="#about" class="btn btn-outline">Our Story</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="products" class="services">
+        <div class="container">
+            <h2 class="section-title">Our Products</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="card-icon">🥛</div>
+                    <h3>Fresh Milk</h3>
+                    <p>Pasteurized full-cream, toned, and skimmed milk delivered fresh to your doorstep daily.</p>
+                </div>
+                <div class="service-card">
+                    <div class="card-icon">🧀</div>
+                    <h3>Dairy Products</h3>
+                    <p>Paneer, butter, ghee, curd, and lassi made from the finest quality milk.</p>
+                </div>
+                <div class="service-card">
+                    <div class="card-icon">🍦</div>
+                    <h3>Ice Cream</h3>
+                    <p>Artisanal flavours crafted with real milk and no artificial additives.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="container">
+            <div class="stats-row">
+                <div class="stat-item"><span class="stat-num">500+</span><span class="stat-label">Dairy Farmers</span></div>
+                <div class="stat-item"><span class="stat-num">25+</span><span class="stat-label">Years of Trust</span></div>
+                <div class="stat-item"><span class="stat-num">10,000L</span><span class="stat-label">Milk Daily</span></div>
+                <div class="stat-item"><span class="stat-num">FSSAI</span><span class="stat-label">Certified</span></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 {{COMPANY_NAME}}. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

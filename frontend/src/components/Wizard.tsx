@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Stethoscope, Shirt, Code, Coffee,
   CheckCircle2, FileUp, LayoutGrid, Users, FolderOpen,
   Target, LayoutTemplate, FileText, Brain,
   ArrowRight, ArrowLeft, Mail, Sparkles,
@@ -11,13 +10,19 @@ import {
 
 type WizardStep = 1 | 2 | 3 | 4 | 5;
 
+interface Palette {
+  id: string;
+  name: string;
+  colors: string[]; // [primary, secondary, accent, bgTint]
+}
+
 interface FormData {
   goal: string;
   layout: string;
   industry: string;
   logoUrl: string | null;
   extractedColor: string;
-  activeColor: string;
+  activePalette: Palette | null;
   mood: string;
   businessName: string;
   email: string;
@@ -31,7 +36,7 @@ export default function Wizard() {
     industry: 'Medical',
     logoUrl: null,
     extractedColor: '',
-    activeColor: 'Radiant Blue',
+    activePalette: null,
     mood: '',
     businessName: '',
     email: '',
@@ -39,6 +44,7 @@ export default function Wizard() {
   const [extracting, setExtracting] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [progressLogs, setProgressLogs] = useState<string[]>([]);
+  const [finalUrl, setFinalUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const steps = [
@@ -50,17 +56,36 @@ export default function Wizard() {
   ];
 
   const industries = [
-    { id: 'Medical', icon: Stethoscope },
-    { id: 'Fashion', icon: Shirt },
-    { id: 'Tech', icon: Code },
-    { id: 'Food', icon: Coffee },
+    { id: 'Medical',           label: 'Medical & Clinics',        emoji: '🏥' },
+    { id: 'Fashion',           label: 'Fashion & Apparel',        emoji: '👗' },
+    { id: 'Tech',              label: 'Tech & Portfolio',         emoji: '💻' },
+    { id: 'Food',              label: 'Cafe & Food',              emoji: '☕' },
+    { id: 'Education',         label: 'Education & Academia',     emoji: '🎓' },
+    { id: 'Construction',      label: 'Construction & Materials', emoji: '🏗️' },
+    { id: 'Interior',          label: 'Interior Design',          emoji: '🛋️' },
+    { id: 'Hospital',          label: 'Hospital & Doctors',       emoji: '🩺' },
+    { id: 'Agency',            label: 'Digital Agency',           emoji: '⚡' },
+    { id: 'Ecommerce',         label: 'E-Commerce Store',         emoji: '🛒' },
+    { id: 'Dairy',             label: 'Dairy Industry',           emoji: '🥛' },
+    { id: 'Real Estate',       label: 'Real Estate',              emoji: '🏘️' },
+    { id: 'Restaurant',     label: 'Restaurant & Dining',      emoji: '🍽️' },
+    { id: 'Social Service', label: 'Social Service & NGO',      emoji: '🤝' },
+    { id: 'Temple',         label: 'Temple & Devotional',       emoji: '🛕' },
   ];
 
-  const colors = [
-    { id: 'Radiant Blue', color: '#1d87f5' },
-    { id: 'Royal Purple', color: '#8a2be2' },
-    { id: 'Forest Green', color: '#228b22' },
-    { id: 'Pastel Pink', color: '#ffb6c1' },
+  const palettes: Palette[] = [
+    { id: 'ocean-pro',    name: 'Ocean Professional', colors: ['#1565C0','#0097A7','#26C6DA','#E3F2FD'] },
+    { id: 'forest-earth', name: 'Forest & Earth',     colors: ['#2E7D32','#558B2F','#F9A825','#F1F8E9'] },
+    { id: 'sunset-warm',  name: 'Sunset Warm',        colors: ['#E64A19','#F57C00','#FDD835','#FFF3E0'] },
+    { id: 'royal-purple', name: 'Royal Purple',       colors: ['#6A1B9A','#8E24AA','#CE93D8','#F3E5F5'] },
+    { id: 'corp-steel',   name: 'Corporate Steel',    colors: ['#1A237E','#283593','#42A5F5','#E8EAF6'] },
+    { id: 'rose-gold',    name: 'Rose & Gold',        colors: ['#C2185B','#E91E63','#F9A825','#FCE4EC'] },
+    { id: 'midnight',     name: 'Midnight Dark',      colors: ['#212121','#37474F','#00BCD4','#263238'] },
+    { id: 'tropical',     name: 'Tropical Vivid',     colors: ['#00897B','#43A047','#FFD600','#E0F2F1'] },
+    { id: 'sage-mint',    name: 'Sage & Mint',        colors: ['#558B6E','#80CBC4','#A5D6A7','#F0FBF5'] },
+    { id: 'crimson-bold', name: 'Crimson Bold',       colors: ['#B71C1C','#D32F2F','#FF7043','#FFEBEE'] },
+    { id: 'golden-hour',  name: 'Golden Hour',        colors: ['#F57F17','#FFA000','#FFD54F','#FFFDE7'] },
+    { id: 'arctic-cool',  name: 'Arctic Cool',        colors: ['#0288D1','#26C6DA','#B2EBF2','#E1F5FE'] },
   ];
 
   const goals = [
@@ -147,7 +172,15 @@ export default function Wizard() {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          // Flatten palette into individual color fields for the template engine
+          primaryColor:   formData.activePalette?.colors[0] || '#1565C0',
+          secondaryColor: formData.activePalette?.colors[1] || '#0097A7',
+          accentColor:    formData.activePalette?.colors[2] || '#26C6DA',
+          bgTint:         formData.activePalette?.colors[3] || '#E3F2FD',
+          paletteName:    formData.activePalette?.name || 'Ocean Professional',
+        })
       });
       const data = await res.json();
 
@@ -159,11 +192,35 @@ export default function Wizard() {
         }
         setProgressLogs(prev => [...prev, `[OK]  Applying "${formData.mood}" content personality...`]);
         
-        setTimeout(() => {
+        setTimeout(async () => {
           setProgressLogs(prev => [...prev, '[...]  Building static site...']);
           setProgressLogs(prev => [...prev, '[OK]  Site compiled — 0 errors']);
           setProgressLogs(prev => [...prev, '[...]  Deploying to global edge network...']);
-          setProgressLogs(prev => [...prev, `[DONE] Your demo is live! ${data.demoUrl}`]);
+          setProgressLogs(prev => [...prev, '[...]  Waiting for GitHub Pages to go live (usually ~30 seconds)...']);
+
+          // Poll the URL until it returns 200 OK
+          let isLive = false;
+          let attempts = 0;
+          while (!isLive && attempts < 24) { // Max 2 minutes
+            await new Promise(r => setTimeout(r, 5000)); // wait 5 seconds
+            attempts++;
+            try {
+              const checkRes = await fetch('/api/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: data.demoUrl })
+              });
+              const checkData = await checkRes.json();
+              if (checkData.live) {
+                isLive = true;
+              }
+            } catch (e) {
+              // Ignore errors and keep polling
+            }
+          }
+
+          setProgressLogs(prev => [...prev, `[DONE] Your demo is fully deployed and live!`]);
+          setFinalUrl(data.demoUrl);
         }, 1500);
       } else {
         setProgressLogs(prev => [...prev, `[ERROR] ${data.error || 'Generation failed'}`]);
@@ -177,7 +234,7 @@ export default function Wizard() {
     switch (step) {
       case 1: return !!formData.goal;
       case 2: return !!formData.layout;
-      case 3: return !!formData.industry && !!formData.activeColor;
+      case 3: return !!formData.industry && !!formData.activePalette;
       case 4: return !!formData.mood && !!formData.businessName;
       case 5: return !!formData.email;
       default: return false;
@@ -250,6 +307,16 @@ export default function Wizard() {
               <span style={{ display: "inline-block", width: "8px", height: "16px", background: "var(--cyan-glow)", animation: "blink 1s step-end infinite" }}></span>
             )}
           </div>
+
+          {/* Final Live Link Popup */}
+          {finalUrl && (
+            <div style={{ marginTop: '40px', animation: 'up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards', textAlign: 'center' }}>
+              <a href={finalUrl} target="_blank" rel="noopener noreferrer" className="btn-cyan" style={{ display: 'inline-flex', padding: '16px 32px', fontSize: '1.2rem', textDecoration: 'none', borderRadius: '8px', boxShadow: '0 0 20px rgba(0, 240, 255, 0.4)' }}>
+                <Sparkles style={{ width: "20px", height: "20px", marginRight: "10px" }} /> Open Your Custom Website
+              </a>
+              <p style={{ color: "#a1a3ab", marginTop: "16px", fontSize: "0.9rem" }}>Your site has been successfully deployed to the edge.</p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -258,27 +325,11 @@ export default function Wizard() {
   return (
     <div className="wizard-card w-full flex">
 
-      {/* Left Icon Sidebar */}
-      <div className="hidden md:flex w-[80px] border-r border-[#1f222e] flex-col items-center py-8 bg-[#0c0e14]">
-        <div style={{ marginBottom: "40px" }} className="text-[var(--cyan-glow)] drop-shadow-[0_0_10px_rgba(0,240,255,0.6)]">
-          <Brain className="w-7 h-7" />
-        </div>
-        <button style={{ marginBottom: "24px" }} className="appearance-none outline-none border-none text-[var(--cyan-glow)] bg-[rgba(0,240,255,0.1)] p-3 rounded-xl cursor-pointer transition-colors shadow-[0_0_15px_rgba(0,240,255,0.1)_inset] flex justify-center items-center">
-          <LayoutGrid className="w-6 h-6" />
-        </button>
-        <button style={{ marginBottom: "24px" }} className="appearance-none outline-none border-none bg-transparent hover:bg-white/5 text-[#a1a3ab] hover:text-white p-3 rounded-xl cursor-pointer transition-colors flex justify-center items-center">
-          <Users className="w-6 h-6" />
-        </button>
-        <button style={{ marginBottom: "24px" }} className="appearance-none outline-none border-none bg-transparent hover:bg-white/5 text-[#a1a3ab] hover:text-white p-3 rounded-xl cursor-pointer transition-colors flex justify-center items-center">
-          <FolderOpen className="w-6 h-6" />
-        </button>
-      </div>
-
       {/* Main Content Area */}
       <div className="flex-1 min-w-0 w-full p-4 sm:p-8 md:px-16 md:py-12">
 
         {/* Stepper */}
-        <div className="scrollbar-hide" style={{ display: "flex", justifyContent: "flex-start", overflowX: "auto", gap: "12px", marginBottom: "40px", paddingBottom: "8px" }}>
+        <div className="scrollbar-hide" style={{ display: "flex", justifyContent: "center", overflowX: "auto", gap: "12px", marginBottom: "40px", paddingBottom: "8px" }}>
           {steps.map((s) => (
             <button
               key={s.num}
@@ -313,7 +364,7 @@ export default function Wizard() {
                   onClick={() => setFormData(prev => ({ ...prev, goal: g.id }))}
                   className="industry-btn cursor-pointer"
                   style={{
-                    flexDirection: "column", alignItems: "flex-start", padding: "24px",
+                    flexDirection: "column", alignItems: "center", textAlign: "center", padding: "28px 24px",
                     borderColor: formData.goal === g.id ? 'var(--cyan-glow)' : '#1f222e',
                     background: formData.goal === g.id ? 'rgba(0, 240, 255, 0.03)' : '#14151a',
                     boxShadow: formData.goal === g.id ? '0 0 15px rgba(0, 240, 255, 0.1) inset' : 'none',
@@ -369,20 +420,21 @@ export default function Wizard() {
               <p className="text-[#8b8e98] text-base text-balance">Set your visual style and assets.</p>
             </div>
 
-            <div style={{ display: "grid", gap: "24px" }} className="grid-cols-1 md:grid-cols-[1fr_2fr_1fr] md:gap-10">
+            <div style={{ display: "flex", flexDirection: "column", gap: "32px", maxWidth: "900px", margin: "0 auto" }}>
 
               {/* Column 1: Industry Presets */}
               <div>
-                <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "20px", paddingLeft: "8px", letterSpacing: "0.5px" }}>Industry Presets</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Industry Presets</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "10px" }}>
                   {industries.map((ind) => (
                     <button
                       key={ind.id}
                       onClick={() => setFormData(prev => ({ ...prev, industry: ind.id }))}
                       className={`industry-btn cursor-pointer ${formData.industry === ind.id ? 'active' : ''}`}
+                      style={{ gap: '10px', padding: '12px 16px' }}
                     >
-                      <ind.icon style={{ width: "20px", height: "20px", opacity: 0.8 }} />
-                      {ind.id}
+                      <span style={{ fontSize: '1.2rem' }}>{ind.emoji}</span>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>{ind.label}</span>
                     </button>
                   ))}
                 </div>
@@ -433,26 +485,62 @@ export default function Wizard() {
                 )}
               </div>
 
-              {/* Column 3: Color Palette */}
-              <div>
-                <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "20px", paddingLeft: "8px", letterSpacing: "0.5px" }}>Color Palette</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "40px" }}>
-                  {colors.map((c) => (
-                    <button
-                      key={c.id}
-                      onClick={() => setFormData(prev => ({ ...prev, activeColor: c.id }))}
-                      className={`color-btn ${formData.activeColor === c.id ? 'active' : ''}`}
-                    >
-                      <div className="color-swatch" style={{ backgroundColor: c.color, border: "1px solid #2a2d36" }}></div>
-                      {c.id}
-                    </button>
-                  ))}
+              {/* Column 2 + 3: Palette Picker (full width below industry) */}
+              <div style={{ marginTop: '8px' }}>
+                <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Choose a Color Palette</h3>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                  gap: '12px',
+                }}>
+                  {palettes.map((p) => {
+                    const isSelected = formData.activePalette?.id === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => setFormData(prev => ({ ...prev, activePalette: p }))}
+                        style={{
+                          appearance: 'none', border: 'none', cursor: 'pointer',
+                          background: isSelected ? 'rgba(0,240,255,0.05)' : '#14151a',
+                          borderRadius: '14px',
+                          padding: '14px',
+                          outline: isSelected ? '2px solid var(--cyan-glow)' : '1px solid #1f222e',
+                          transition: 'all 0.2s',
+                          textAlign: 'left',
+                          boxShadow: isSelected ? '0 0 16px rgba(0,240,255,0.15) inset' : 'none',
+                        }}
+                      >
+                        {/* Color Swatches Row */}
+                        <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', height: '44px', marginBottom: '10px' }}>
+                          {p.colors.map((hex, i) => (
+                            <div key={i} style={{ flex: 1, backgroundColor: hex }} />
+                          ))}
+                        </div>
+                        {/* Palette Name */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <span style={{ fontSize: '0.82rem', fontWeight: 600, color: isSelected ? 'var(--cyan-glow)' : '#a1a3ab' }}>
+                            {p.name}
+                          </span>
+                          {isSelected && (
+                            <span style={{ fontSize: '0.7rem', background: 'var(--cyan-glow)', color: '#000', borderRadius: '99px', padding: '2px 8px', fontWeight: 700 }}>✓ Selected</span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
-
-                <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "20px", paddingLeft: "8px", letterSpacing: "0.5px" }}>Typography</h3>
-                <div style={{ color: "#8b8e98", fontSize: "0.85rem", padding: "20px", background: "#14151a", border: "1px solid #1f222e", borderRadius: "12px" }}>
-                  Auto-selected based on industry
-                </div>
+                {/* Selected palette preview */}
+                {formData.activePalette && (
+                  <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: '#0c0e14', borderRadius: '10px', border: '1px solid #1f222e' }}>
+                    <span style={{ fontSize: '0.8rem', color: '#8b8e98' }}>Active palette:</span>
+                    {formData.activePalette.colors.map((hex, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: hex, border: '1px solid rgba(255,255,255,0.1)' }} />
+                        <span style={{ fontSize: '0.72rem', color: '#6b6e78', fontFamily: 'monospace' }}>{hex}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
             </div>
@@ -529,7 +617,6 @@ export default function Wizard() {
                 { label: 'Goal', value: goals.find(g => g.id === formData.goal)?.label || '—' },
                 { label: 'Layout', value: layouts.find(l => l.id === formData.layout)?.label || '—' },
                 { label: 'Industry', value: formData.industry || '—' },
-                { label: 'Color', value: formData.activeColor || '—' },
                 { label: 'Personality', value: moods.find(m => m.id === formData.mood)?.label || '—' },
                 { label: 'Business', value: formData.businessName || '—' },
               ].map((item) => (
@@ -538,6 +625,18 @@ export default function Wizard() {
                   <div style={{ fontSize: "1rem", color: "white", fontWeight: 500 }}>{item.value}</div>
                 </div>
               ))}
+              {/* Palette summary card */}
+              {formData.activePalette && (
+                <div style={{ background: "#14151a", border: "1px solid #1f222e", borderRadius: "12px", padding: "16px 20px", gridColumn: 'span 2' }}>
+                  <div style={{ fontSize: "0.75rem", color: "#6b6e78", fontWeight: 600, marginBottom: "10px", textTransform: "uppercase", letterSpacing: "1px" }}>Color Palette</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ display: 'flex', borderRadius: '6px', overflow: 'hidden', height: '28px', width: '120px', flexShrink: 0 }}>
+                      {formData.activePalette.colors.map((hex, i) => <div key={i} style={{ flex: 1, background: hex }} />)}
+                    </div>
+                    <span style={{ fontSize: '0.95rem', color: 'white', fontWeight: 500 }}>{formData.activePalette.name}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Email Input */}

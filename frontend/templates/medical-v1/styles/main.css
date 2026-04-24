@@ -1,5 +1,5 @@
-:root {
-    --primary-color: {{PRIMARY_COLOR}};
+﻿:root {
+    --primary:   {{PRIMARY_COLOR}};`n    --secondary: {{SECONDARY_COLOR}};`n    --accent:    {{ACCENT_COLOR}};`n    --bg-tint:   {{BG_TINT}};
     --text-dark: #2d3748;
     --text-light: #718096;
     --bg-light: #f7fafc;
@@ -25,7 +25,7 @@ body {
 .nav-links { display: flex; flex-direction: column; gap: 1rem; align-items: center; text-align: center; }
 .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 600; }
 .btn { padding: 0.75rem 1.5rem; border-radius: 99px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block; }
-.btn-primary { background: var(--primary-color); color: white; }
+.btn-primary { background: var(--primary); color: white; }
 
 @media (min-width: 768px) {
     .navbar .container { flex-direction: row; justify-content: space-between; }
@@ -36,7 +36,7 @@ body {
 /* Hero - Mobile First */
 .hero { padding: 5rem 0; background: linear-gradient(135deg, #e6f2ff 0%, #ffffff 100%); text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
 .hero h1 { font-size: 2.2rem; margin-bottom: 1rem; font-weight: 300; }
-.highlight { color: var(--primary-color); font-weight: 600; }
+.highlight { color: var(--primary); font-weight: 600; }
 .lead { font-size: 1rem; color: var(--text-light); max-width: 600px; margin: 0 auto 2rem; padding: 0 1rem; }
 
 @media (min-width: 768px) {
@@ -66,3 +66,4 @@ body {
 
 @keyframes up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 .animate-up { animation: up 0.8s ease forwards; }
+

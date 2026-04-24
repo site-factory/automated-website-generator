@@ -11,11 +11,23 @@ async function generateDemo(data) {
     const workingDir = process.cwd();
     const targetDir = path.join(os.tmpdir(), 'demos', demoId);
     
-    // Select template based on industry/layout
+    // Select template based on industry
     let templateName = 'professional-v1';
-    if (data.industry && data.industry.toLowerCase() === 'medical') templateName = 'medical-v1';
-    else if (data.industry && data.industry.toLowerCase() === 'fashion') templateName = 'fashion-v1';
-    // Defaults to professional-v1 for now if others don't exist
+    const industry = (data.industry || '').toLowerCase();
+    if (industry === 'medical') templateName = 'medical-v1';
+    else if (industry === 'fashion') templateName = 'fashion-v1';
+    else if (industry === 'portfolio' || industry === 'tech') templateName = 'portfolio-v1';
+    else if (industry === 'education' || industry === 'school' || industry === 'college' || industry === 'university' || industry === 'academy') templateName = 'education-v1';
+    else if (industry === 'construction' || industry === 'building materials' || industry === 'raw materials') templateName = 'construction-v1';
+    else if (industry === 'interior' || industry === 'interior design' || industry === 'interior designer') templateName = 'interior-v1';
+    else if (industry === 'hospital' || industry === 'doctor' || industry === 'clinic' || industry === 'healthcare') templateName = 'hospital-v1';
+    else if (industry === 'agency' || industry === 'digital agency' || industry === 'marketing agency') templateName = 'agency-v1';
+    else if (industry === 'ecommerce' || industry === 'online store' || industry === 'shopping') templateName = 'ecommerce-v1';
+    else if (industry === 'dairy' || industry === 'dairy industry' || industry === 'milk') templateName = 'dairy-v1';
+    else if (industry === 'real estate' || industry === 'realestate' || industry === 'property') templateName = 'realestate-v1';
+    else if (industry === 'restaurant' || industry === 'food' || industry === 'cafe' || industry === 'dining') templateName = 'restaurant-v1';
+    else if (industry === 'social service' || industry === 'ngo' || industry === 'charity' || industry === 'social') templateName = 'socialservice-v1';
+    else if (industry === 'temple' || industry === 'devotional' || industry === 'religious' || industry === 'spiritual') templateName = 'temple-v1';
 
     const templateDir = path.join(workingDir, 'templates', templateName);
 
@@ -43,15 +55,25 @@ async function generateDemo(data) {
             if (textExtensions.includes(ext)) {
                 let content = fs.readFileSync(src, 'utf8');
                 
-                // Replace strings
+                // Replace all template variables
                 Object.keys(data).forEach(key => {
                     const value = data[key];
+                    if (typeof value !== 'string') return; // skip objects/arrays
                     const snakeKey = key.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase();
                     const simpleUpper = key.toUpperCase();
-                    
                     content = content.split(`{{${snakeKey}}}`).join(value);
                     content = content.split(`{{${simpleUpper}}}`).join(value);
                 });
+
+                // Inject palette color variables into CSS :root blocks
+                const primary   = data.primaryColor   || '#1565C0';
+                const secondary = data.secondaryColor || '#0097A7';
+                const accent    = data.accentColor    || '#26C6DA';
+                const bgTint    = data.bgTint         || '#E3F2FD';
+                content = content.split('{{PRIMARY_COLOR}}').join(primary);
+                content = content.split('{{SECONDARY_COLOR}}').join(secondary);
+                content = content.split('{{ACCENT_COLOR}}').join(accent);
+                content = content.split('{{BG_TINT}}').join(bgTint);
 
                 // Inject floating CTA into HTML files
                 if (ext === '.html') {
@@ -62,7 +84,7 @@ async function generateDemo(data) {
             <p style="margin: 0; font-size: 0.8rem; color: #a1a3ab; margin-bottom: 4px;">Demo built by AI SiteSpark</p>
             <p style="margin: 0; font-size: 1rem; font-weight: 600;">Love this website?</p>
         </div>
-        <a href="https://example.com/claim?demo=${demoId}" target="_blank" style="background: #00f0ff; color: #000; text-decoration: none; padding: 10px 20px; border-radius: 99px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; box-shadow: 0 0 15px rgba(0,240,255,0.4);">Claim It Now</a>
+        <a href="${data.baseUrl || 'https://automated-website-generator.vercel.app'}/claim?demo=${demoId}" target="_blank" style="background: #00f0ff; color: #000; text-decoration: none; padding: 10px 20px; border-radius: 99px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; box-shadow: 0 0 15px rgba(0,240,255,0.4);">Claim It Now</a>
     </div>
 </body>`;
                     content = content.replace('</body>', floatingCTA);
