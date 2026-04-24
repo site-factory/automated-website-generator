@@ -11,7 +11,15 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In production, this would POST to an API or EmailJS
+    // Track contact form submission
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'contact_form',
+        data: { name: form.name, email: form.email, phone: form.phone, service: form.service, message: form.message }
+      })
+    }).catch(() => {});
     setSent(true);
   };
 

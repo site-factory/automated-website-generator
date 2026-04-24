@@ -221,6 +221,25 @@ export default function Wizard() {
 
           setProgressLogs(prev => [...prev, `[DONE] Your demo is fully deployed and live!`]);
           setFinalUrl(data.demoUrl);
+
+          // Track demo generation in Google Sheet
+          fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              event: 'demo_generated',
+              data: {
+                email: formData.email,
+                businessName: formData.businessName,
+                industry: formData.industry,
+                paletteName: formData.activePalette?.name || '',
+                goal: formData.goal,
+                layout: formData.layout,
+                demoUrl: data.demoUrl || '',
+                githubUrl: data.githubUrl || '',
+              }
+            })
+          }).catch(() => {});
         }, 1500);
       } else {
         setProgressLogs(prev => [...prev, `[ERROR] ${data.error || 'Generation failed'}`]);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle2, Calendar, Mail, Sparkles, Phone } from 'lucide-react';
 
@@ -41,6 +41,18 @@ const tiers = [
 function ClaimContent() {
   const searchParams = useSearchParams();
   const demoId = searchParams.get('demo');
+
+  // Track claim page visit
+  useEffect(() => {
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'claim_visit',
+        data: { demoId: demoId || '', referrer: typeof document !== 'undefined' ? document.referrer : '' }
+      })
+    }).catch(() => {});
+  }, [demoId]);
 
   return (
     <div style={{
