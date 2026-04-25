@@ -1,5 +1,8 @@
 ﻿:root {
-    --primary:   {{PRIMARY_COLOR}};`n    --secondary: {{SECONDARY_COLOR}};`n    --accent:    {{ACCENT_COLOR}};`n    --bg-tint:   {{BG_TINT}};
+    --primary:   {{PRIMARY_COLOR}};
+    --secondary: {{SECONDARY_COLOR}};
+    --accent:    {{ACCENT_COLOR}};
+    --bg-tint:   {{BG_TINT}};
     --text-dark: #1a1a1a;
     --text-light: #666666;
     --bg-light: #f9f9f9;

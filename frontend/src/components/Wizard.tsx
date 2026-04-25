@@ -2,13 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  CheckCircle2, FileUp, LayoutGrid, Users, FolderOpen,
-  Target, LayoutTemplate, FileText, Brain,
-  ArrowRight, ArrowLeft, Mail, Sparkles,
-  Grid2x2, Rows3, LayoutPanelTop
+  CheckCircle2, FileUp, Brain,
+  ArrowRight, ArrowLeft, Mail, Sparkles, LayoutTemplate
 } from 'lucide-react';
 
-type WizardStep = 1 | 2 | 3 | 4 | 5;
+type WizardStep = 1 | 2;
 
 interface Palette {
   id: string;
@@ -48,11 +46,8 @@ export default function Wizard() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const steps = [
-    { num: 1, label: 'Goal', icon: Target },
-    { num: 2, label: 'Layout', icon: LayoutTemplate },
-    { num: 3, label: 'Brand Identity', icon: null },
-    { num: 4, label: 'Content', icon: FileText },
-    { num: 5, label: 'Review', icon: CheckCircle2 },
+    { num: 1, label: 'Design & Content', icon: LayoutTemplate },
+    { num: 2, label: 'Review', icon: CheckCircle2 },
   ];
 
   const industries = [
@@ -88,18 +83,7 @@ export default function Wizard() {
     { id: 'arctic-cool',  name: 'Arctic Cool',        colors: ['#0288D1','#26C6DA','#B2EBF2','#E1F5FE'] },
   ];
 
-  const goals = [
-    { id: 'lead-gen', label: 'Generate Leads', desc: 'Capture emails and contact info from visitors' },
-    { id: 'portfolio', label: 'Showcase Work', desc: 'Display projects, case studies, and credentials' },
-    { id: 'ecommerce', label: 'Sell Products', desc: 'Set up a storefront with product listings' },
-    { id: 'info', label: 'Inform & Educate', desc: 'Share information about services and expertise' },
-  ];
 
-  const layouts = [
-    { id: 'single', label: 'Single Page', desc: 'Everything on one scrollable page', icon: Rows3 },
-    { id: 'multi', label: 'Multi Page', desc: 'Separate pages for each section', icon: Grid2x2 },
-    { id: 'landing', label: 'Landing Page', desc: 'Focused conversion page with CTA', icon: LayoutPanelTop },
-  ];
 
   const moods = [
     { id: 'visionary', label: 'The Visionary', desc: 'Minimalist, high-end imagery, short impactful copy' },
@@ -251,17 +235,14 @@ export default function Wizard() {
 
   const canProceed = (): boolean => {
     switch (step) {
-      case 1: return !!formData.goal;
-      case 2: return !!formData.layout;
-      case 3: return !!formData.industry && !!formData.activePalette;
-      case 4: return !!formData.mood && !!formData.businessName;
-      case 5: return !!formData.email;
+      case 1: return !!formData.industry && !!formData.activePalette && !!formData.mood && !!formData.businessName;
+      case 2: return !!formData.email;
       default: return false;
     }
   };
 
   const handleNext = () => {
-    if (step < 5) setStep((step + 1) as WizardStep);
+    if (step < 2) setStep((step + 1) as WizardStep);
     else startGeneration();
   };
 
@@ -366,266 +347,193 @@ export default function Wizard() {
           ))}
         </div>
 
-        {/* ============ STEP 1: GOAL ============ */}
+        {/* ============ STEP 1: DESIGN & CONTENT ============ */}
         {step === 1 && (
           <div>
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
               <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-white mb-3 leading-tight text-balance">
-                Step 1: What&apos;s your website goal?
+                Step 1: Design & Content
               </h2>
-              <p className="text-[#8b8e98] text-base text-balance">Choose the primary purpose of your website.</p>
+              <p className="text-[#8b8e98] text-base text-balance">Set your visual style, brand assets, and content personality.</p>
             </div>
 
-            <div style={{ display: "grid", gap: "16px", maxWidth: "700px", margin: "0 auto" }} className="grid-cols-1 sm:grid-cols-2">
-              {goals.map((g) => (
-                <button
-                  key={g.id}
-                  onClick={() => setFormData(prev => ({ ...prev, goal: g.id }))}
-                  className="industry-btn cursor-pointer"
-                  style={{
-                    flexDirection: "column", alignItems: "center", textAlign: "center", padding: "28px 24px",
-                    borderColor: formData.goal === g.id ? 'var(--cyan-glow)' : '#1f222e',
-                    background: formData.goal === g.id ? 'rgba(0, 240, 255, 0.03)' : '#14151a',
-                    boxShadow: formData.goal === g.id ? '0 0 15px rgba(0, 240, 255, 0.1) inset' : 'none',
-                  }}
-                >
-                  <span style={{ fontSize: "1rem", fontWeight: 600, color: formData.goal === g.id ? "white" : "#a1a3ab", marginBottom: "8px", display: "block" }}>{g.label}</span>
-                  <span style={{ fontSize: "0.8rem", color: "#6b6e78", lineHeight: 1.5 }}>{g.desc}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+            <div style={{ display: "flex", flexDirection: "column", gap: "48px", maxWidth: "900px", margin: "0 auto" }}>
+              
+              {/* Business Name & Industry Row */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+                {/* Business Name */}
+                <div>
+                  <label style={{ display: "block", color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "12px", letterSpacing: "0.5px" }}>Business Name</label>
+                  <input
+                    type="text"
+                    placeholder='e.g. "Zenith Wellness Group"'
+                    value={formData.businessName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, businessName: e.target.value }))}
+                    style={{
+                      width: "100%", padding: "16px 20px",
+                      background: "#14151a", border: "1px solid #1f222e",
+                      borderRadius: "12px", color: "white", fontSize: "1rem",
+                      outline: "none", fontFamily: "inherit",
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = 'var(--cyan-glow)'}
+                    onBlur={(e) => e.target.style.borderColor = '#1f222e'}
+                  />
+                </div>
 
-        {/* ============ STEP 2: LAYOUT ============ */}
-        {step === 2 && (
-          <div>
-            <div style={{ textAlign: "center", marginBottom: "56px" }}>
-              <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-white mb-3 leading-tight text-balance">
-                Step 2: Choose your layout style
-              </h2>
-              <p className="text-[#8b8e98] text-base text-balance">How should your website be structured?</p>
-            </div>
+                {/* Industry Presets */}
+                <div>
+                  <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Industry Preset</h3>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "10px" }}>
+                    {industries.map((ind) => (
+                      <button
+                        key={ind.id}
+                        onClick={() => setFormData(prev => ({ ...prev, industry: ind.id }))}
+                        className={`industry-btn cursor-pointer ${formData.industry === ind.id ? 'active' : ''}`}
+                        style={{ gap: '10px', padding: '12px 16px' }}
+                      >
+                        <span style={{ fontSize: '1.2rem' }}>{ind.emoji}</span>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>{ind.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-            <div style={{ display: "grid", gap: "16px", maxWidth: "800px", margin: "0 auto" }} className="grid-cols-1 sm:grid-cols-3">
-              {layouts.map((l) => (
-                <button
-                  key={l.id}
-                  onClick={() => setFormData(prev => ({ ...prev, layout: l.id }))}
-                  className="industry-btn cursor-pointer"
-                  style={{
-                    flexDirection: "column", alignItems: "center", textAlign: "center", padding: "32px 20px",
-                    borderColor: formData.layout === l.id ? 'var(--cyan-glow)' : '#1f222e',
-                    background: formData.layout === l.id ? 'rgba(0, 240, 255, 0.03)' : '#14151a',
-                    boxShadow: formData.layout === l.id ? '0 0 15px rgba(0, 240, 255, 0.1) inset' : 'none',
-                  }}
-                >
-                  <l.icon style={{ width: "32px", height: "32px", marginBottom: "16px", color: formData.layout === l.id ? 'var(--cyan-glow)' : '#6b6e78' }} />
-                  <span style={{ fontSize: "1rem", fontWeight: 600, color: formData.layout === l.id ? "white" : "#a1a3ab", marginBottom: "8px", display: "block" }}>{l.label}</span>
-                  <span style={{ fontSize: "0.8rem", color: "#6b6e78", lineHeight: 1.5 }}>{l.desc}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ============ STEP 3: BRAND IDENTITY ============ */}
-        {step === 3 && (
-          <div>
-            <div style={{ textAlign: "center", marginBottom: "56px" }}>
-              <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-white mb-3 leading-tight text-balance">
-                Step 3: Define Your Brand Identity
-              </h2>
-              <p className="text-[#8b8e98] text-base text-balance">Set your visual style and assets.</p>
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "32px", maxWidth: "900px", margin: "0 auto" }}>
-
-              {/* Column 1: Industry Presets */}
+              {/* Mood Selector */}
               <div>
-                <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Industry Presets</h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "10px" }}>
-                  {industries.map((ind) => (
+                <label style={{ display: "block", color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "20px", letterSpacing: "0.5px" }}>Content Personality</label>
+                <div style={{ display: "grid", gap: "16px" }} className="grid-cols-1 sm:grid-cols-3">
+                  {moods.map((m) => (
                     <button
-                      key={ind.id}
-                      onClick={() => setFormData(prev => ({ ...prev, industry: ind.id }))}
-                      className={`industry-btn cursor-pointer ${formData.industry === ind.id ? 'active' : ''}`}
-                      style={{ gap: '10px', padding: '12px 16px' }}
+                      key={m.id}
+                      onClick={() => setFormData(prev => ({ ...prev, mood: m.id }))}
+                      className="industry-btn cursor-pointer"
+                      style={{
+                        flexDirection: "column", alignItems: "flex-start", padding: "24px",
+                        borderColor: formData.mood === m.id ? 'var(--cyan-glow)' : '#1f222e',
+                        background: formData.mood === m.id ? 'rgba(0, 240, 255, 0.03)' : '#14151a',
+                        boxShadow: formData.mood === m.id ? '0 0 15px rgba(0, 240, 255, 0.1) inset' : 'none',
+                      }}
                     >
-                      <span style={{ fontSize: '1.2rem' }}>{ind.emoji}</span>
-                      <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>{ind.label}</span>
+                      <span style={{ fontSize: "1rem", fontWeight: 600, color: formData.mood === m.id ? "var(--cyan-glow)" : "#a1a3ab", marginBottom: "8px", display: "block" }}>{m.label}</span>
+                      <span style={{ fontSize: "0.8rem", color: "#6b6e78", lineHeight: 1.5 }}>{m.desc}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Column 2: Upload Logo */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <div className="upload-area" style={{ width: "100%", minHeight: "350px" }}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <h3 style={{ fontSize: "1.15rem", color: "white", fontWeight: 500, marginBottom: "32px", position: "relative", zIndex: 10 }}>Upload Your Brand Logo</h3>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, position: "relative", zIndex: 10 }}>
-                    {formData.logoUrl ? (
-                      <img src={formData.logoUrl} alt="Logo" style={{ maxHeight: "80px", marginBottom: "16px" }} />
-                    ) : (
-                      <FileUp style={{ width: "56px", height: "56px", color: "var(--cyan-glow)", marginBottom: "20px", filter: "drop-shadow(0 0 12px rgba(0,240,255,0.8))" }} />
-                    )}
-                    <p style={{ fontSize: "1.1rem", color: "white", fontWeight: 500, marginBottom: "8px" }}>
-                      {formData.logoUrl ? 'Logo uploaded!' : 'Upload Logo'}
-                    </p>
-                    <p style={{ color: "#8b8e98", fontSize: "0.85rem", maxWidth: "220px", textAlign: "center", marginBottom: "32px", lineHeight: 1.6 }}>
-                      {formData.logoUrl ? 'Click to change' : <>Drop your logo here or browse<br/>[PNG, SVG, JPG. Max 5MB]</>}
-                    </p>
-                    {!formData.logoUrl && <button className="upload-btn">Upload Logo</button>}
-                  </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={(e) => e.target.files?.[0] && extractColor(e.target.files[0])}
-                  />
-                </div>
-
-                {/* Extracted color feedback */}
-                {extracting && (
-                  <p style={{ color: "var(--cyan-glow)", marginTop: "16px", fontSize: "0.85rem", animation: "pulse 1.5s ease-in-out infinite" }}>
-                    Analyzing brand palette...
-                  </p>
-                )}
-                {formData.extractedColor && !extracting && formData.logoUrl && (
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "16px" }}>
-                    <div style={{ width: "24px", height: "24px", borderRadius: "6px", backgroundColor: formData.extractedColor, border: "1px solid rgba(255,255,255,0.2)" }}></div>
-                    <p style={{ fontSize: "0.85rem", fontWeight: 500, color: "#a1a3ab" }}>
-                      Brand color detected: <span style={{ color: "var(--cyan-glow)", textTransform: "uppercase" }}>{formData.extractedColor}</span>
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Column 2 + 3: Palette Picker (full width below industry) */}
-              <div style={{ marginTop: '8px' }}>
-                <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Choose a Color Palette</h3>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                  gap: '12px',
-                }}>
-                  {palettes.map((p) => {
-                    const isSelected = formData.activePalette?.id === p.id;
-                    return (
-                      <button
-                        key={p.id}
-                        onClick={() => setFormData(prev => ({ ...prev, activePalette: p }))}
-                        style={{
-                          appearance: 'none', border: 'none', cursor: 'pointer',
-                          background: isSelected ? 'rgba(0,240,255,0.05)' : '#14151a',
-                          borderRadius: '14px',
-                          padding: '14px',
-                          outline: isSelected ? '2px solid var(--cyan-glow)' : '1px solid #1f222e',
-                          transition: 'all 0.2s',
-                          textAlign: 'left',
-                          boxShadow: isSelected ? '0 0 16px rgba(0,240,255,0.15) inset' : 'none',
-                        }}
-                      >
-                        {/* Color Swatches Row */}
-                        <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', height: '44px', marginBottom: '10px' }}>
-                          {p.colors.map((hex, i) => (
-                            <div key={i} style={{ flex: 1, backgroundColor: hex }} />
-                          ))}
-                        </div>
-                        {/* Palette Name */}
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: '0.82rem', fontWeight: 600, color: isSelected ? 'var(--cyan-glow)' : '#a1a3ab' }}>
-                            {p.name}
-                          </span>
-                          {isSelected && (
-                            <span style={{ fontSize: '0.7rem', background: 'var(--cyan-glow)', color: '#000', borderRadius: '99px', padding: '2px 8px', fontWeight: 700 }}>✓ Selected</span>
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-                {/* Selected palette preview */}
-                {formData.activePalette && (
-                  <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: '#0c0e14', borderRadius: '10px', border: '1px solid #1f222e' }}>
-                    <span style={{ fontSize: '0.8rem', color: '#8b8e98' }}>Active palette:</span>
-                    {formData.activePalette.colors.map((hex, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: hex, border: '1px solid rgba(255,255,255,0.1)' }} />
-                        <span style={{ fontSize: '0.72rem', color: '#6b6e78', fontFamily: 'monospace' }}>{hex}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* ============ STEP 4: CONTENT / MOOD ============ */}
-        {step === 4 && (
-          <div>
-            <div style={{ textAlign: "center", marginBottom: "56px" }}>
-              <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-white mb-3 leading-tight text-balance">
-                Step 4: Define your content
-              </h2>
-              <p className="text-[#8b8e98] text-base text-balance">Tell us about your brand and choose a personality.</p>
-            </div>
-
-            {/* Business Name */}
-            <div style={{ maxWidth: "500px", margin: "0 auto 48px" }}>
-              <label style={{ display: "block", color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "12px", letterSpacing: "0.5px" }}>Business Name</label>
-              <input
-                type="text"
-                placeholder='e.g. "Zenith Wellness Group"'
-                value={formData.businessName}
-                onChange={(e) => setFormData(prev => ({ ...prev, businessName: e.target.value }))}
-                style={{
-                  width: "100%", padding: "16px 20px",
-                  background: "#14151a", border: "1px solid #1f222e",
-                  borderRadius: "12px", color: "white", fontSize: "1rem",
-                  outline: "none", fontFamily: "inherit",
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--cyan-glow)'}
-                onBlur={(e) => e.target.style.borderColor = '#1f222e'}
-              />
-            </div>
-
-            {/* Mood Selector */}
-            <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-              <label style={{ display: "block", color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "20px", letterSpacing: "0.5px" }}>Content Personality</label>
-              <div style={{ display: "grid", gap: "16px" }} className="grid-cols-1 sm:grid-cols-3">
-                {moods.map((m) => (
-                  <button
-                    key={m.id}
-                    onClick={() => setFormData(prev => ({ ...prev, mood: m.id }))}
-                    className="industry-btn cursor-pointer"
-                    style={{
-                      flexDirection: "column", alignItems: "flex-start", padding: "24px",
-                      borderColor: formData.mood === m.id ? 'var(--cyan-glow)' : '#1f222e',
-                      background: formData.mood === m.id ? 'rgba(0, 240, 255, 0.03)' : '#14151a',
-                      boxShadow: formData.mood === m.id ? '0 0 15px rgba(0, 240, 255, 0.1) inset' : 'none',
-                    }}
+              {/* Upload Logo & Palette Picker */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+                {/* Upload Logo */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <div className="upload-area" style={{ width: "100%", minHeight: "250px" }}
+                    onClick={() => fileInputRef.current?.click()}
                   >
-                    <span style={{ fontSize: "1rem", fontWeight: 600, color: formData.mood === m.id ? "var(--cyan-glow)" : "#a1a3ab", marginBottom: "8px", display: "block" }}>{m.label}</span>
-                    <span style={{ fontSize: "0.8rem", color: "#6b6e78", lineHeight: 1.5 }}>{m.desc}</span>
-                  </button>
-                ))}
+                    <h3 style={{ fontSize: "1.15rem", color: "white", fontWeight: 500, marginBottom: "20px", position: "relative", zIndex: 10 }}>Upload Your Brand Logo</h3>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, position: "relative", zIndex: 10 }}>
+                      {formData.logoUrl ? (
+                        <img src={formData.logoUrl} alt="Logo" style={{ maxHeight: "80px", marginBottom: "16px" }} />
+                      ) : (
+                        <FileUp style={{ width: "56px", height: "56px", color: "var(--cyan-glow)", marginBottom: "20px", filter: "drop-shadow(0 0 12px rgba(0,240,255,0.8))" }} />
+                      )}
+                      <p style={{ fontSize: "1.1rem", color: "white", fontWeight: 500, marginBottom: "8px" }}>
+                        {formData.logoUrl ? 'Logo uploaded!' : 'Upload Logo'}
+                      </p>
+                      <p style={{ color: "#8b8e98", fontSize: "0.85rem", maxWidth: "220px", textAlign: "center", marginBottom: "32px", lineHeight: 1.6 }}>
+                        {formData.logoUrl ? 'Click to change' : <>Drop your logo here or browse<br/>[PNG, SVG, JPG. Max 5MB]</>}
+                      </p>
+                      {!formData.logoUrl && <button className="upload-btn">Upload Logo</button>}
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={(e) => e.target.files?.[0] && extractColor(e.target.files[0])}
+                    />
+                  </div>
+
+                  {/* Extracted color feedback */}
+                  {extracting && (
+                    <p style={{ color: "var(--cyan-glow)", marginTop: "16px", fontSize: "0.85rem", animation: "pulse 1.5s ease-in-out infinite" }}>
+                      Analyzing brand palette...
+                    </p>
+                  )}
+                  {formData.extractedColor && !extracting && formData.logoUrl && (
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "16px" }}>
+                      <div style={{ width: "24px", height: "24px", borderRadius: "6px", backgroundColor: formData.extractedColor, border: "1px solid rgba(255,255,255,0.2)" }}></div>
+                      <p style={{ fontSize: "0.85rem", fontWeight: 500, color: "#a1a3ab" }}>
+                        Brand color detected: <span style={{ color: "var(--cyan-glow)", textTransform: "uppercase" }}>{formData.extractedColor}</span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Palette Picker */}
+                <div>
+                  <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Choose a Color Palette</h3>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                    gap: '12px',
+                  }}>
+                    {palettes.map((p) => {
+                      const isSelected = formData.activePalette?.id === p.id;
+                      return (
+                        <button
+                          key={p.id}
+                          onClick={() => setFormData(prev => ({ ...prev, activePalette: p }))}
+                          style={{
+                            appearance: 'none', border: 'none', cursor: 'pointer',
+                            background: isSelected ? 'rgba(0,240,255,0.05)' : '#14151a',
+                            borderRadius: '14px',
+                            padding: '14px',
+                            outline: isSelected ? '2px solid var(--cyan-glow)' : '1px solid #1f222e',
+                            transition: 'all 0.2s',
+                            textAlign: 'left',
+                            boxShadow: isSelected ? '0 0 16px rgba(0,240,255,0.15) inset' : 'none',
+                          }}
+                        >
+                          <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', height: '44px', marginBottom: '10px' }}>
+                            {p.colors.map((hex, i) => (
+                              <div key={i} style={{ flex: 1, backgroundColor: hex }} />
+                            ))}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <span style={{ fontSize: '0.82rem', fontWeight: 600, color: isSelected ? 'var(--cyan-glow)' : '#a1a3ab' }}>
+                              {p.name}
+                            </span>
+                            {isSelected && (
+                              <span style={{ fontSize: '0.7rem', background: 'var(--cyan-glow)', color: '#000', borderRadius: '99px', padding: '2px 8px', fontWeight: 700 }}>✓ Selected</span>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {formData.activePalette && (
+                    <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: '#0c0e14', borderRadius: '10px', border: '1px solid #1f222e' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#8b8e98' }}>Active palette:</span>
+                      {formData.activePalette.colors.map((hex, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: hex, border: '1px solid rgba(255,255,255,0.1)' }} />
+                          <span style={{ fontSize: '0.72rem', color: '#6b6e78', fontFamily: 'monospace' }}>{hex}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* ============ STEP 5: REVIEW & SUBMIT ============ */}
-        {step === 5 && (
+        {/* ============ STEP 2: REVIEW & SUBMIT ============ */}
+        {step === 2 && (
           <div>
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
               <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-white mb-3 leading-tight text-balance">
-                Step 5: Review & Generate
+                Step 2: Review & Generate
               </h2>
               <p className="text-[#8b8e98] text-base text-balance">Confirm your choices and enter your email to receive the demo link.</p>
             </div>
@@ -633,11 +541,9 @@ export default function Wizard() {
             {/* Summary Grid */}
             <div style={{ maxWidth: "600px", margin: "0 auto 48px", display: "grid", gap: "16px" }} className="grid-cols-1 sm:grid-cols-2">
               {[
-                { label: 'Goal', value: goals.find(g => g.id === formData.goal)?.label || '—' },
-                { label: 'Layout', value: layouts.find(l => l.id === formData.layout)?.label || '—' },
+                { label: 'Business', value: formData.businessName || '—' },
                 { label: 'Industry', value: formData.industry || '—' },
                 { label: 'Personality', value: moods.find(m => m.id === formData.mood)?.label || '—' },
-                { label: 'Business', value: formData.businessName || '—' },
               ].map((item) => (
                 <div key={item.label} style={{ background: "#14151a", border: "1px solid #1f222e", borderRadius: "12px", padding: "16px 20px" }}>
                   <div style={{ fontSize: "0.75rem", color: "#6b6e78", fontWeight: 600, marginBottom: "6px", textTransform: "uppercase", letterSpacing: "1px" }}>{item.label}</div>
@@ -711,7 +617,7 @@ export default function Wizard() {
               fontSize: "0.95rem",
             }}
           >
-            {step === 5 ? (
+            {step === 2 ? (
               <><Sparkles style={{ width: "16px", height: "16px" }} /> Generate My Website</>
             ) : (
               <>Next <ArrowRight style={{ width: "16px", height: "16px" }} /></>

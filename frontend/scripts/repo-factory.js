@@ -5,6 +5,7 @@ const os = require('os');
 async function generateDemo(data) {
     const timestamp = Date.now();
     const companyName = data.businessName || data.companyName || 'Demo Website';
+    data.companyName = companyName; // Ensure companyName is available for template replacement
     const demoId = companyName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + timestamp;
     
     // On Vercel, we can only write to /tmp.
@@ -39,7 +40,21 @@ async function generateDemo(data) {
     }
     fs.mkdirSync(targetDir, { recursive: true });
 
-    // 2. Recursive Copy and Replace
+    // 2. Pre-process Logo File Upload
+    let finalLogoPath = 'assets/brand-logo.png'; // default fallback
+    let logoBuffer = null;
+    if (data.logoUrl && data.logoUrl.startsWith('data:image')) {
+        const matches = data.logoUrl.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
+        if (matches && matches.length === 3) {
+            let ext = matches[1] === 'jpeg' ? 'jpg' : matches[1];
+            if (ext === 'svg+xml') ext = 'svg';
+            logoBuffer = Buffer.from(matches[2], 'base64');
+            finalLogoPath = `assets/brand-logo.${ext}`;
+            data.logoPath = finalLogoPath;
+        }
+    }
+
+    // 3. Recursive Copy and Replace
     function copyAndReplace(src, dest) {
         const stats = fs.statSync(src);
         if (stats.isDirectory()) {
@@ -75,6 +90,11 @@ async function generateDemo(data) {
                 content = content.split('{{ACCENT_COLOR}}').join(accent);
                 content = content.split('{{BG_TINT}}').join(bgTint);
 
+                // Dynamically fix the logo path in HTML if it was hardcoded to .png
+                if (ext === '.html' && finalLogoPath !== 'assets/brand-logo.png') {
+                    content = content.split('assets/brand-logo.png').join(finalLogoPath);
+                }
+
                 // Inject floating CTA into HTML files
                 if (ext === '.html') {
                     const floatingCTA = `
@@ -100,24 +120,14 @@ async function generateDemo(data) {
 
     copyAndReplace(templateDir, targetDir);
 
-    // 3. Handle Logo File Upload
-    if (data.logoUrl && data.logoUrl.startsWith('data:image')) {
-        const matches = data.logoUrl.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
-        if (matches && matches.length === 3) {
-            const ext = matches[1] === 'jpeg' ? 'jpg' : matches[1];
-            const buffer = Buffer.from(matches[2], 'base64');
-            const assetsDir = path.join(targetDir, 'assets');
-            if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir, { recursive: true });
-            
-            const logoPath = path.join(assetsDir, `brand-logo.${ext}`);
-            fs.writeFileSync(logoPath, buffer);
-            console.log(`Logo saved to ${logoPath}`);
-            
-            // Overwrite any logo reference in text files to the new logo
-            // This is a naive but effective way for the prototype
-            // e.g., mapping {{LOGO_PATH}}
-            data.logoPath = `assets/brand-logo.${ext}`;
-        }
+    // 4. Write the parsed Logo File if provided
+    if (logoBuffer) {
+        const assetsDir = path.join(targetDir, 'assets');
+        if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir, { recursive: true });
+        
+        const logoDest = path.join(targetDir, finalLogoPath);
+        fs.writeFileSync(logoDest, logoBuffer);
+        console.log(`Logo saved to ${logoDest}`);
     }
 
     // 4. Deploy to GitHub (if token is provided)
