@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{COMPANY_NAME}} | Portfolio</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar"><div class="container"><div class="logo-text">{{COMPANY_NAME}}</div><div class="nav-links"><a href="#work">Work</a><a href="#about">About</a><a href="#contact" class="btn btn-primary">Hire Me</a></div></div></nav>
+
+    <header class="hero">
+        <div class="container animate-up">
+            <div class="hero-eyebrow">Designer & Developer</div>
+            <h1>Crafting Experiences<br><span class="highlight">That Resonate.</span></h1>
+            <p class="lead">{{HERO_SUBTEXT}}</p>
+            <div class="hero-buttons"><a href="#work" class="btn btn-primary">View Work</a><a href="#contact" class="btn btn-outline">Let's Talk</a></div>
+        </div>
+    </header>
+
+    <section id="work" class="services">
+        <div class="container">
+            <div class="section-header"><h2 class="section-title">Selected Work</h2><p class="section-sub">A curated selection of recent projects</p></div>
+            <div class="service-grid">
+                <div class="service-card">
+                    <div style="background: var(--primary); height: 200px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
+                    <h3>Project Alpha</h3><p>UI/UX Design & Frontend Development</p>
+                </div>
+                <div class="service-card">
+                    <div style="background: var(--secondary); height: 200px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
+                    <h3>Project Beta</h3><p>Full-stack Web Application</p>
+                </div>
+                <div class="service-card">
+                    <div style="background: var(--accent); height: 200px; border-radius: 8px; margin-bottom: 1.5rem; opacity: 0.7;"></div>
+                    <h3>Project Gamma</h3><p>Mobile App Design</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Let's build something <span class="highlight">together</span></h2>
+                <p>I'm always interested in hearing about new projects and opportunities.</p>
+                <a href="mailto:hello@example.com" class="btn btn-primary">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer"><div class="container"><p>&copy; 2026 {{COMPANY_NAME}}. All rights reserved.</p></div></footer>
+</body>
+</html>

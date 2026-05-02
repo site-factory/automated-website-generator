@@ -12,25 +12,37 @@ async function generateDemo(data) {
     const workingDir = process.cwd();
     const targetDir = path.join(os.tmpdir(), 'demos', demoId);
     
-    // Select template based on industry
-    let templateName = 'professional-v1';
-    const industry = (data.industry || '').toLowerCase();
-    if (industry === 'medical') templateName = 'medical-v1';
-    else if (industry === 'fashion') templateName = 'fashion-v1';
-    else if (industry === 'portfolio' || industry === 'tech') templateName = 'portfolio-v1';
-    else if (industry === 'education' || industry === 'school' || industry === 'college' || industry === 'university' || industry === 'academy') templateName = 'education-v1';
-    else if (industry === 'construction' || industry === 'building materials' || industry === 'raw materials') templateName = 'construction-v1';
-    else if (industry === 'interior' || industry === 'interior design' || industry === 'interior designer') templateName = 'interior-v1';
-    else if (industry === 'hospital' || industry === 'doctor' || industry === 'clinic' || industry === 'healthcare') templateName = 'hospital-v1';
-    else if (industry === 'agency' || industry === 'digital agency' || industry === 'marketing agency') templateName = 'agency-v1';
-    else if (industry === 'ecommerce' || industry === 'online store' || industry === 'shopping') templateName = 'ecommerce-v1';
-    else if (industry === 'dairy' || industry === 'dairy industry' || industry === 'milk') templateName = 'dairy-v1';
-    else if (industry === 'real estate' || industry === 'realestate' || industry === 'property') templateName = 'realestate-v1';
-    else if (industry === 'restaurant' || industry === 'food' || industry === 'cafe' || industry === 'dining') templateName = 'restaurant-v1';
-    else if (industry === 'social service' || industry === 'ngo' || industry === 'charity' || industry === 'social') templateName = 'socialservice-v1';
-    else if (industry === 'temple' || industry === 'devotional' || industry === 'religious' || industry === 'spiritual') templateName = 'temple-v1';
+    // Select template based on industry and style variant
+    // templateStyle: 'v1' (standard), 'v2' (modern/dark), 'v3' (classic/elegant)
+    const templateStyle = data.templateStyle || 'v1';
+    const validStyles = ['v1', 'v2', 'v3'];
+    const styleSuffix = validStyles.includes(templateStyle) ? templateStyle : 'v1';
 
-    const templateDir = path.join(workingDir, 'templates', templateName);
+    let templateBase = 'professional';
+    const industry = (data.industry || '').toLowerCase();
+    if (industry === 'medical') templateBase = 'medical';
+    else if (industry === 'fashion') templateBase = 'fashion';
+    else if (industry === 'portfolio' || industry === 'tech') templateBase = 'portfolio';
+    else if (industry === 'education' || industry === 'school' || industry === 'college' || industry === 'university' || industry === 'academy') templateBase = 'education';
+    else if (industry === 'construction' || industry === 'building materials' || industry === 'raw materials') templateBase = 'construction';
+    else if (industry === 'interior' || industry === 'interior design' || industry === 'interior designer') templateBase = 'interior';
+    else if (industry === 'hospital' || industry === 'doctor' || industry === 'clinic' || industry === 'healthcare') templateBase = 'hospital';
+    else if (industry === 'agency' || industry === 'digital agency' || industry === 'marketing agency') templateBase = 'agency';
+    else if (industry === 'ecommerce' || industry === 'online store' || industry === 'shopping') templateBase = 'ecommerce';
+    else if (industry === 'dairy' || industry === 'dairy industry' || industry === 'milk') templateBase = 'dairy';
+    else if (industry === 'real estate' || industry === 'realestate' || industry === 'property') templateBase = 'realestate';
+    else if (industry === 'restaurant' || industry === 'food' || industry === 'cafe' || industry === 'dining') templateBase = 'restaurant';
+    else if (industry === 'social service' || industry === 'ngo' || industry === 'charity' || industry === 'social') templateBase = 'socialservice';
+    else if (industry === 'temple' || industry === 'devotional' || industry === 'religious' || industry === 'spiritual') templateBase = 'temple';
+
+    const templateName = `${templateBase}-${styleSuffix}`;
+
+    // Fallback: if the requested style doesn't exist on disk, fall back to v1
+    let templateDir = path.join(workingDir, 'templates', templateName);
+    if (!fs.existsSync(templateDir)) {
+        console.log(`Template ${templateName} not found, falling back to ${templateBase}-v1`);
+        templateDir = path.join(workingDir, 'templates', `${templateBase}-v1`);
+    }
 
     console.log('Generating demo: ' + demoId + ' using template: ' + templateName);
 
@@ -40,21 +52,7 @@ async function generateDemo(data) {
     }
     fs.mkdirSync(targetDir, { recursive: true });
 
-    // 2. Pre-process Logo File Upload
-    let finalLogoPath = 'assets/brand-logo.png'; // default fallback
-    let logoBuffer = null;
-    if (data.logoUrl && data.logoUrl.startsWith('data:image')) {
-        const matches = data.logoUrl.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
-        if (matches && matches.length === 3) {
-            let ext = matches[1] === 'jpeg' ? 'jpg' : matches[1];
-            if (ext === 'svg+xml') ext = 'svg';
-            logoBuffer = Buffer.from(matches[2], 'base64');
-            finalLogoPath = `assets/brand-logo.${ext}`;
-            data.logoPath = finalLogoPath;
-        }
-    }
-
-    // 3. Recursive Copy and Replace
+    // 2. Recursive Copy and Replace
     function copyAndReplace(src, dest) {
         const stats = fs.statSync(src);
         if (stats.isDirectory()) {
@@ -90,9 +88,9 @@ async function generateDemo(data) {
                 content = content.split('{{ACCENT_COLOR}}').join(accent);
                 content = content.split('{{BG_TINT}}').join(bgTint);
 
-                // Dynamically fix the logo path in HTML if it was hardcoded to .png
-                if (ext === '.html' && finalLogoPath !== 'assets/brand-logo.png') {
-                    content = content.split('assets/brand-logo.png').join(finalLogoPath);
+                // Embed logo directly as base64 to bypass CDN propagation delays
+                if (ext === '.html' && data.logoUrl && data.logoUrl.startsWith('data:image')) {
+                    content = content.split('assets/brand-logo.png').join(data.logoUrl);
                 }
 
                 // Inject floating CTA into HTML files
@@ -120,17 +118,7 @@ async function generateDemo(data) {
 
     copyAndReplace(templateDir, targetDir);
 
-    // 4. Write the parsed Logo File if provided
-    if (logoBuffer) {
-        const assetsDir = path.join(targetDir, 'assets');
-        if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir, { recursive: true });
-        
-        const logoDest = path.join(targetDir, finalLogoPath);
-        fs.writeFileSync(logoDest, logoBuffer);
-        console.log(`Logo saved to ${logoDest}`);
-    }
-
-    // 4. Deploy to GitHub (if token is provided)
+    // 3. Deploy to GitHub (if token is provided)
     let githubUrl = null;
     let pagesUrl = null;
     if (process.env.GITHUB_TOKEN) {

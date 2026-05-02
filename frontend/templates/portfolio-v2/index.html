@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{COMPANY_NAME}} | Creative Portfolio</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar"><div class="container"><div class="logo-text">{{COMPANY_NAME}}</div><div class="nav-links"><a href="#work">Work</a><a href="#about">About</a><a href="#contact" class="btn btn-primary">Hire Me →</a></div></div></nav>
+
+    <header class="hero">
+        <div class="hero-glow"></div>
+        <div class="container animate-up">
+            <p class="hero-greeting">Hey, I'm {{COMPANY_NAME}} 👋</p>
+            <h1>I craft <span class="highlight">digital</span> products that <span class="highlight">matter</span></h1>
+            <p class="lead">{{HERO_SUBTEXT}}</p>
+            <div class="hero-buttons"><a href="#work" class="btn btn-primary">View Work</a><a href="#contact" class="btn btn-ghost">Let's Talk ↗</a></div>
+        </div>
+        <div class="hero-grid"></div>
+    </header>
+
+    <section id="work" class="services">
+        <div class="container">
+            <div class="section-label">Portfolio</div>
+            <h2 class="section-title">Selected <span class="highlight">work</span></h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="work-placeholder" style="background: linear-gradient(135deg, var(--primary), var(--accent)); height: 200px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
+                    <h3>Project Alpha</h3><p>UI/UX Design & Frontend Development</p>
+                </div>
+                <div class="service-card">
+                    <div class="work-placeholder" style="background: linear-gradient(135deg, var(--accent), var(--secondary)); height: 200px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
+                    <h3>Project Beta</h3><p>Full-stack Web Application</p>
+                </div>
+                <div class="service-card">
+                    <div class="work-placeholder" style="background: linear-gradient(135deg, var(--secondary), var(--primary)); height: 200px; border-radius: 8px; margin-bottom: 1.5rem;"></div>
+                    <h3>Project Gamma</h3><p>Mobile App Design</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Let's build something <span class="highlight">amazing</span></h2>
+                <p>Have a project in mind? Let's make it happen.</p>
+                <a href="mailto:hello@example.com" class="btn btn-primary btn-lg">Get in Touch →</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer"><div class="container"><p>&copy; 2026 {{COMPANY_NAME}}. All rights reserved.</p></div></footer>
+</body>
+</html>

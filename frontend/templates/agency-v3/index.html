@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{COMPANY_NAME}} | Digital Agency</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-text">{{COMPANY_NAME}}</div>
+            <div class="nav-links">
+                <a href="#services">Services</a>
+                <a href="#work">Portfolio</a>
+                <a href="#about">About</a>
+                <a href="#contact" class="btn btn-primary">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container animate-up">
+            <div class="hero-eyebrow">Established with Purpose</div>
+            <h1>Strategy. Design.<br><span class="highlight">Results.</span></h1>
+            <p class="lead">{{HERO_SUBTEXT}}</p>
+            <div class="hero-buttons">
+                <a href="#work" class="btn btn-primary">Our Portfolio</a>
+                <a href="#contact" class="btn btn-outline">Schedule a Call</a>
+            </div>
+        </div>
+        <div class="hero-divider">
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0,60 C360,0 1080,0 1440,60 L1440,60 L0,60 Z" fill="var(--bg-cream)"/></svg>
+        </div>
+    </header>
+
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What We Offer</h2>
+                <p class="section-sub">Timeless solutions for modern challenges</p>
+            </div>
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="card-line"></div>
+                    <h3>Brand Identity</h3>
+                    <p>Developing cohesive visual identities that communicate your brand's values with elegance and clarity.</p>
+                </div>
+                <div class="service-card">
+                    <div class="card-line"></div>
+                    <h3>Web Design & Dev</h3>
+                    <p>Beautifully crafted websites that balance form and function, delivering seamless user experiences.</p>
+                </div>
+                <div class="service-card">
+                    <div class="card-line"></div>
+                    <h3>Strategic Marketing</h3>
+                    <p>Thoughtful campaigns rooted in data and insight, designed to foster meaningful growth.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <h2>A decade of building brands that <span class="highlight">endure</span></h2>
+                    <p>{{COMPANY_NAME}} was founded on the belief that great design is timeless. We partner with ambitious brands to create work that transcends trends.</p>
+                </div>
+                <div class="stats-col">
+                    <div class="stat-item"><span class="stat-num">150+</span><span class="stat-label">Projects Completed</span></div>
+                    <div class="stat-item"><span class="stat-num">10</span><span class="stat-label">Years in Business</span></div>
+                    <div class="stat-item"><span class="stat-num">98%</span><span class="stat-label">Client Retention</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="work-section">
+        <div class="container">
+            <h2 class="section-title">Selected Work</h2>
+            <div class="work-grid">
+                <div class="work-card">
+                    <div class="work-img" style="background: var(--primary);"></div>
+                    <h3>Meridian Finance — Rebrand</h3>
+                    <p class="work-cat">Branding + Strategy</p>
+                </div>
+                <div class="work-card">
+                    <div class="work-img" style="background: var(--secondary);"></div>
+                    <h3>Artisan Home — E-Commerce</h3>
+                    <p class="work-cat">Design + Development</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Let's create something <span class="highlight">exceptional</span></h2>
+                <p>We'd love to hear about your project. Reach out and let's begin.</p>
+                <a href="mailto:hello@example.com" class="btn btn-primary">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 {{COMPANY_NAME}}. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

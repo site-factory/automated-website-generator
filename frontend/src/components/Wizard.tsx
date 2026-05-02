@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   CheckCircle2, FileUp, Brain,
-  ArrowRight, ArrowLeft, Mail, Sparkles, LayoutTemplate
+  ArrowRight, ArrowLeft, Mail, Sparkles, LayoutTemplate, Palette, Moon, Sun, BookOpen
 } from 'lucide-react';
 
 type WizardStep = 1 | 2;
@@ -14,10 +14,20 @@ interface Palette {
   colors: string[]; // [primary, secondary, accent, bgTint]
 }
 
+interface TemplateStyleOption {
+  id: string;
+  value: string;
+  label: string;
+  desc: string;
+  icon: 'moon' | 'sun' | 'book';
+  preview: string;
+}
+
 interface FormData {
   goal: string;
   layout: string;
   industry: string;
+  templateStyle: string;
   logoUrl: string | null;
   extractedColor: string;
   activePalette: Palette | null;
@@ -32,6 +42,7 @@ export default function Wizard() {
     goal: '',
     layout: '',
     industry: 'Medical',
+    templateStyle: 'v1',
     logoUrl: null,
     extractedColor: '',
     activePalette: null,
@@ -84,6 +95,12 @@ export default function Wizard() {
   ];
 
 
+
+  const templateStyles: TemplateStyleOption[] = [
+    { id: 'modern',   value: 'v2', label: '🌙 Modern',   desc: 'Dark mode, glassmorphism, gradient accents, bold typography', icon: 'moon',  preview: 'linear-gradient(135deg, #0a0a0f 0%, #111118 50%, #1a1a2e 100%)' },
+    { id: 'standard', value: 'v1', label: '☀️ Standard', desc: 'Clean light theme, vibrant colors, professional layout',       icon: 'sun',   preview: 'linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e3f2fd 100%)' },
+    { id: 'classic',  value: 'v3', label: '📜 Classic',  desc: 'Elegant serif headings, warm cream tones, timeless design',    icon: 'book',  preview: 'linear-gradient(135deg, #faf8f5 0%, #f5f0ea 50%, #ede8e0 100%)' },
+  ];
 
   const moods = [
     { id: 'visionary', label: 'The Visionary', desc: 'Minimalist, high-end imagery, short impactful copy' },
@@ -164,6 +181,7 @@ export default function Wizard() {
           accentColor:    formData.activePalette?.colors[2] || '#26C6DA',
           bgTint:         formData.activePalette?.colors[3] || '#E3F2FD',
           paletteName:    formData.activePalette?.name || 'Ocean Professional',
+          templateStyle:  formData.templateStyle || 'v1',
         })
       });
       const data = await res.json();
@@ -235,7 +253,7 @@ export default function Wizard() {
 
   const canProceed = (): boolean => {
     switch (step) {
-      case 1: return !!formData.industry && !!formData.activePalette && !!formData.mood && !!formData.businessName;
+      case 1: return !!formData.industry && !!formData.templateStyle && !!formData.activePalette && !!formData.mood && !!formData.businessName;
       case 2: return !!formData.email;
       default: return false;
     }
@@ -397,6 +415,65 @@ export default function Wizard() {
                     ))}
                   </div>
                 </div>
+
+                {/* Template Style Selector */}
+                <div>
+                  <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Template Style</h3>
+                  <div style={{ display: "grid", gap: "16px" }} className="grid-cols-1 sm:grid-cols-3">
+                    {templateStyles.map((ts) => {
+                      const isSelected = formData.templateStyle === ts.value;
+                      return (
+                        <button
+                          key={ts.id}
+                          onClick={() => setFormData(prev => ({ ...prev, templateStyle: ts.value }))}
+                          className="industry-btn cursor-pointer"
+                          style={{
+                            flexDirection: "column",
+                            alignItems: "stretch",
+                            padding: "0",
+                            borderColor: isSelected ? 'var(--cyan-glow)' : '#1f222e',
+                            background: isSelected ? 'rgba(0, 240, 255, 0.03)' : '#14151a',
+                            boxShadow: isSelected ? '0 0 20px rgba(0, 240, 255, 0.12) inset' : 'none',
+                            overflow: 'hidden',
+                            borderRadius: '14px',
+                          }}
+                        >
+                          {/* Preview strip */}
+                          <div style={{
+                            height: '48px',
+                            background: ts.preview,
+                            borderBottom: isSelected ? '2px solid var(--cyan-glow)' : '1px solid #1f222e',
+                            position: 'relative',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                            {ts.icon === 'moon' && <Moon style={{ width: '20px', height: '20px', color: isSelected ? 'var(--cyan-glow)' : '#8888a0' }} />}
+                            {ts.icon === 'sun' && <Sun style={{ width: '20px', height: '20px', color: isSelected ? 'var(--cyan-glow)' : '#555' }} />}
+                            {ts.icon === 'book' && <BookOpen style={{ width: '20px', height: '20px', color: isSelected ? 'var(--cyan-glow)' : '#8a7e6e' }} />}
+                          </div>
+                          {/* Label */}
+                          <div style={{ padding: '16px' }}>
+                            <span style={{
+                              fontSize: "1rem", fontWeight: 600,
+                              color: isSelected ? "var(--cyan-glow)" : "#a1a3ab",
+                              marginBottom: "8px", display: "block",
+                            }}>{ts.label}</span>
+                            <span style={{ fontSize: "0.78rem", color: "#6b6e78", lineHeight: 1.5, display: "block" }}>{ts.desc}</span>
+                            {isSelected && (
+                              <span style={{
+                                display: 'inline-block', marginTop: '10px',
+                                fontSize: '0.7rem', background: 'var(--cyan-glow)',
+                                color: '#000', borderRadius: '99px',
+                                padding: '2px 10px', fontWeight: 700,
+                              }}>✓ Selected</span>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
 
               {/* Mood Selector */}
@@ -543,6 +620,7 @@ export default function Wizard() {
               {[
                 { label: 'Business', value: formData.businessName || '—' },
                 { label: 'Industry', value: formData.industry || '—' },
+                { label: 'Template Style', value: templateStyles.find(ts => ts.value === formData.templateStyle)?.label || '☀️ Standard' },
                 { label: 'Personality', value: moods.find(m => m.id === formData.mood)?.label || '—' },
               ].map((item) => (
                 <div key={item.label} style={{ background: "#14151a", border: "1px solid #1f222e", borderRadius: "12px", padding: "16px 20px" }}>

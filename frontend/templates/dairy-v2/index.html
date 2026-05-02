@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{COMPANY_NAME}} | Farm Fresh Dairy</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-text">{{COMPANY_NAME}}</div>
+            <div class="nav-links">
+                <a href="#products">Products</a>
+                <a href="#farm">Our Farm</a>
+                <a href="#quality">Quality</a>
+                <a href="#contact" class="btn btn-primary">Order Now →</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-glow"></div>
+        <div class="container animate-up">
+            <div class="hero-badge">🥛 100% Farm Fresh</div>
+            <h1>Pure & <span class="highlight">natural</span> dairy from <span class="highlight">{{COMPANY_NAME}}</span></h1>
+            <p class="lead">{{HERO_SUBTEXT}}</p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary">Shop Products</a>
+                <a href="#farm" class="btn btn-ghost">Our Story ↗</a>
+            </div>
+        </div>
+        <div class="hero-grid"></div>
+    </header>
+
+    <section id="products" class="services">
+        <div class="container">
+            <div class="section-label">Products</div>
+            <h2 class="section-title">Farm-fresh <span class="highlight">dairy</span> delivered daily</h2>
+            <div class="service-grid">
+                <div class="service-card"><div class="card-number">01</div><h3>Fresh Milk</h3><p>Pasteurized full-cream, toned, and skimmed milk delivered fresh to your doorstep daily.</p><div class="card-arrow">→</div></div>
+                <div class="service-card"><div class="card-number">02</div><h3>Paneer & Cheese</h3><p>Handcrafted paneer, butter, ghee, curd, and lassi made from the finest quality milk.</p><div class="card-arrow">→</div></div>
+                <div class="service-card"><div class="card-number">03</div><h3>Artisanal Ice Cream</h3><p>Small-batch ice cream crafted with real milk, no artificial additives. 20+ flavours.</p><div class="card-arrow">→</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="farm" class="stats-section">
+        <div class="container">
+            <div class="stats-row">
+                <div class="stat-item"><span class="stat-num">500+</span><span class="stat-label">Dairy Farmers</span></div>
+                <div class="stat-item"><span class="stat-num">25+</span><span class="stat-label">Years of Trust</span></div>
+                <div class="stat-item"><span class="stat-num">10,000L</span><span class="stat-label">Milk Daily</span></div>
+                <div class="stat-item"><span class="stat-num">FSSAI</span><span class="stat-label">Certified</span></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container"><p>&copy; 2026 {{COMPANY_NAME}}. All rights reserved.</p></div>
+    </footer>
+</body>
+</html>
