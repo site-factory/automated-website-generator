@@ -2,14 +2,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #090a0f;
-  --panel-bg: #11131a;
-  --panel-border: #1f222e;
-  --cyan-glow: #00f0ff;
-  --cyan-glow-dim: rgba(0, 240, 255, 0.2);
-  --purple-glow: #b14bf4;
-  --text-main: #ffffff;
-  --text-muted: #8b8e98;
+  /* ConsultantSpace-inspired palette */
+  --background: #ffffff;
+  --background-secondary: #F8FAFC;
+  --panel-bg: #ffffff;
+  --panel-border: #E2E8F0;
+  --primary: #00A38D;
+  --primary-hover: #008C79;
+  --primary-dim: rgba(0, 163, 141, 0.15);
+  --primary-soft: #F0FDFA;
+  --text-main: #0F172A;
+  --text-body: #475569;
+  --text-muted: #64748B;
+  --border: #E2E8F0;
 }
 
 * { box-sizing: border-box; padding: 0; margin: 0; }
@@ -28,7 +33,7 @@ body {
   top: 30%;
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(circle, rgba(177, 75, 244, 0.12) 0%, transparent 50%);
+  background: radial-gradient(circle, rgba(0, 163, 141, 0.06) 0%, transparent 50%);
   z-index: -1;
   pointer-events: none;
 }
@@ -39,38 +44,38 @@ body {
   top: 15%;
   width: 60vw;
   height: 60vw;
-  background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, transparent 50%);
+  background: radial-gradient(circle, rgba(0, 163, 141, 0.04) 0%, transparent 50%);
   z-index: -1;
   pointer-events: none;
 }
 
 .btn-cyan {
-  background: var(--cyan-glow);
-  color: #000;
+  background: var(--primary);
+  color: #ffffff;
   font-weight: 600;
   border-radius: 9999px;
   padding: 0.6rem 2rem;
-  box-shadow: 0 0 20px var(--cyan-glow-dim), 0 0 8px rgba(0, 240, 255, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
   transition: all 0.3s;
   letter-spacing: 0.5px;
 }
 
 .btn-cyan:hover {
-  box-shadow: 0 0 30px var(--cyan-glow-dim), 0 0 15px var(--cyan-glow);
+  background: var(--primary-hover);
+  box-shadow: 0 4px 14px rgba(0, 163, 141, 0.3), 0 2px 6px rgba(0, 163, 141, 0.15);
 }
 
 .wizard-card {
-  background: rgba(12, 14, 20, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.05), 0 25px 60px rgba(0,0,0,0.8);
-  backdrop-filter: blur(12px);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 10px 40px rgba(0, 0, 0, 0.06);
   position: relative;
   overflow: hidden;
 }
 
 .step-item {
-  background: #181a20;
+  background: var(--background-secondary);
   border: 1px solid transparent;
   color: var(--text-muted);
   border-radius: 9999px;
@@ -84,14 +89,15 @@ body {
 }
 
 .step-item.active {
-  border-color: var(--cyan-glow);
-  color: var(--cyan-glow);
-  box-shadow: 0 0 15px var(--cyan-glow-dim) inset, 0 0 8px var(--cyan-glow-dim);
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-soft);
+  box-shadow: none;
 }
 
 .step-number {
-  background: var(--cyan-glow);
-  color: #000;
+  background: var(--primary);
+  color: #ffffff;
   border-radius: 4px;
   width: 20px;
   height: 20px;
@@ -103,14 +109,14 @@ body {
 }
 
 .industry-btn {
-  background: #14151a;
-  border: 1px solid #1f222e;
+  background: var(--background);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1rem 1.25rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #a1a3ab;
+  color: var(--text-body);
   font-weight: 500;
   font-size: 0.9rem;
   width: 100%;
@@ -119,24 +125,25 @@ body {
 }
 
 .industry-btn:hover {
-  background: #1a1c23;
+  background: var(--background-secondary);
   color: var(--text-main);
+  border-color: #CBD5E1;
 }
 
 .industry-btn.active {
-  border-color: var(--cyan-glow);
+  border-color: var(--primary);
   color: var(--text-main);
-  background: rgba(0, 240, 255, 0.03);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.1) inset;
+  background: var(--primary-soft);
+  box-shadow: none;
 }
 
 .industry-btn.active svg {
-  color: var(--cyan-glow);
+  color: var(--primary);
 }
 
 .upload-area {
-  background: linear-gradient(180deg, rgba(23,25,32,0.9) 0%, rgba(13,15,20,0.95) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--background-secondary);
+  border: 2px dashed var(--border);
   border-radius: 16px;
   display: flex;
   flex-direction: column;
@@ -146,7 +153,11 @@ body {
   text-align: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5) inset;
+  transition: border-color 0.2s;
+}
+
+.upload-area:hover {
+  border-color: var(--primary);
 }
 
 .upload-area::before {
@@ -154,32 +165,37 @@ body {
   position: absolute;
   top: 0; left: 10%; right: 10%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background: transparent;
 }
 
 .upload-btn {
   background: transparent;
-  border: 1px solid var(--cyan-glow);
-  color: var(--cyan-glow);
+  border: 1px solid var(--primary);
+  color: var(--primary);
   border-radius: 9999px;
   padding: 0.6rem 2rem;
   font-size: 0.85rem;
   font-weight: 500;
-  box-shadow: 0 0 12px var(--cyan-glow-dim) inset;
   margin-top: 1.5rem;
   cursor: pointer;
   letter-spacing: 0.5px;
+  transition: all 0.2s;
+}
+
+.upload-btn:hover {
+  background: var(--primary);
+  color: #ffffff;
 }
 
 .color-btn {
-  background: #14151a;
-  border: 1px solid #1f222e;
+  background: var(--background);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.6rem 1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #a1a3ab;
+  color: var(--text-body);
   font-size: 0.9rem;
   font-weight: 500;
   width: 100%;
@@ -187,9 +203,10 @@ body {
 }
 
 .color-btn.active {
-  border-color: var(--cyan-glow);
+  border-color: var(--primary);
   color: var(--text-main);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.1) inset;
+  background: var(--primary-soft);
+  box-shadow: none;
 }
 
 .color-swatch {

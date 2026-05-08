@@ -272,11 +272,11 @@ export default function Wizard() {
     return (
       <div className="wizard-card w-full flex">
         {/* Sidebar */}
-        <div className="hidden md:flex w-[80px] border-r border-[#1f222e] flex-col items-center py-8 bg-[#0c0e14]">
-          <div style={{ marginBottom: "40px" }} className="text-[var(--cyan-glow)] drop-shadow-[0_0_10px_rgba(0,240,255,0.6)]">
+        <div className="hidden md:flex w-[80px] border-r border-[#E2E8F0] flex-col items-center py-8 bg-[#F8FAFC]">
+          <div style={{ marginBottom: "40px" }} className="text-[var(--primary)] drop-shadow-[0_0_10px_rgba(0,163,141,0.4)]">
             <Brain className="w-7 h-7" />
           </div>
-          <div style={{ marginBottom: "24px" }} className="text-[var(--cyan-glow)] bg-[rgba(0,240,255,0.1)] p-3 rounded-xl flex justify-center items-center">
+          <div style={{ marginBottom: "24px" }} className="text-[var(--primary)] bg-[rgba(0,163,141,0.08)] p-3 rounded-xl flex justify-center items-center">
             <Sparkles className="w-6 h-6" />
           </div>
         </div>
@@ -286,53 +286,53 @@ export default function Wizard() {
           {/* Spinner */}
           <div style={{ width: "80px", height: "80px", marginBottom: "40px", position: "relative" }}>
             <div style={{
-              position: "absolute", inset: 0, border: "3px solid rgba(0,240,255,0.15)",
+              position: "absolute", inset: 0, border: "3px solid rgba(0,163,141,0.12)",
               borderRadius: "50%"
             }}></div>
             <div style={{
-              position: "absolute", inset: 0, border: "3px solid var(--cyan-glow)",
+              position: "absolute", inset: 0, border: "3px solid var(--primary)",
               borderTop: "3px solid transparent", borderRadius: "50%",
               animation: "spin 1s linear infinite"
             }}></div>
           </div>
 
-          <h2 className="text-2xl sm:text-[1.75rem] font-semibold mb-2 text-white text-center leading-tight text-balance">
+          <h2 className="text-2xl sm:text-[1.75rem] font-semibold mb-2 text-slate-900 text-center leading-tight text-balance">
             Building your masterpiece...
           </h2>
-          <p className="text-[#8b8e98] mb-10 text-[0.95rem] text-center text-balance">
+          <p className="text-[#64748B] mb-10 text-[0.95rem] text-center text-balance">
             Hang tight — our AI is crafting your bespoke demo.
           </p>
 
           {/* Terminal Logs */}
           <div style={{
             width: "100%", maxWidth: "520px",
-            background: "#0c0e14", border: "1px solid #1f222e",
+            background: "#F1F5F9", border: "1px solid #E2E8F0",
             borderRadius: "12px", padding: "24px",
             fontFamily: "monospace", fontSize: "0.8rem", lineHeight: "1.8",
           }}>
             {progressLogs.map((log, i) => (
               <div key={i} style={{
-                color: log.startsWith('[DONE]') ? '#00f0ff'
-                  : log.startsWith('[OK]') ? '#4ade80'
-                  : log.startsWith('[...]') ? '#facc15'
-                  : '#8b8e98',
+                color: log.startsWith('[DONE]') ? '#00A38D'
+                  : log.startsWith('[OK]') ? '#059669'
+                  : log.startsWith('[...]') ? '#D97706'
+                  : '#64748B',
                 opacity: i === progressLogs.length - 1 && !log.startsWith('[DONE]') ? 1 : 0.85,
               }}>
                 {log}
               </div>
             ))}
             {progressLogs.length > 0 && !progressLogs[progressLogs.length - 1]?.startsWith('[DONE]') && (
-              <span style={{ display: "inline-block", width: "8px", height: "16px", background: "var(--cyan-glow)", animation: "blink 1s step-end infinite" }}></span>
+              <span style={{ display: "inline-block", width: "8px", height: "16px", background: "var(--primary)", animation: "blink 1s step-end infinite" }}></span>
             )}
           </div>
 
           {/* Final Live Link Popup */}
           {finalUrl && (
             <div style={{ marginTop: '40px', animation: 'up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards', textAlign: 'center' }}>
-              <a href={finalUrl} target="_blank" rel="noopener noreferrer" className="btn-cyan" style={{ display: 'inline-flex', padding: '16px 32px', fontSize: '1.2rem', textDecoration: 'none', borderRadius: '8px', boxShadow: '0 0 20px rgba(0, 240, 255, 0.4)' }}>
+              <a href={finalUrl} target="_blank" rel="noopener noreferrer" className="btn-cyan" style={{ display: 'inline-flex', padding: '16px 32px', fontSize: '1.2rem', textDecoration: 'none', borderRadius: '8px', boxShadow: '0 0 20px rgba(0,163,141,0.3)' }}>
                 <Sparkles style={{ width: "20px", height: "20px", marginRight: "10px" }} /> Open Your Custom Website
               </a>
-              <p style={{ color: "#a1a3ab", marginTop: "16px", fontSize: "0.9rem" }}>Your site has been successfully deployed to the edge.</p>
+              <p style={{ color: "#475569", marginTop: "16px", fontSize: "0.9rem" }}>Your site has been successfully deployed to the edge.</p>
             </div>
           )}
         </div>
@@ -353,7 +353,7 @@ export default function Wizard() {
               key={s.num}
               onClick={() => setStep(s.num as WizardStep)}
               className={`step-item cursor-pointer whitespace-nowrap ${step === s.num ? 'active' : ''}`}
-              style={{ border: step === s.num ? '1px solid var(--cyan-glow)' : '1px solid transparent' }}
+              style={{ border: step === s.num ? '1px solid var(--primary)' : '1px solid transparent' }}
             >
               {s.num === step ? (
                 <div className="step-number">{s.num}</div>
@@ -369,10 +369,10 @@ export default function Wizard() {
         {step === 1 && (
           <div>
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
-              <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-white mb-3 leading-tight text-balance">
+              <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-slate-900 mb-3 leading-tight text-balance">
                 Step 1: Design & Content
               </h2>
-              <p className="text-[#8b8e98] text-base text-balance">Set your visual style, brand assets, and content personality.</p>
+              <p className="text-[#64748B] text-base text-balance">Set your visual style, brand assets, and content personality.</p>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "48px", maxWidth: "900px", margin: "0 auto" }}>
@@ -381,7 +381,7 @@ export default function Wizard() {
               <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
                 {/* Business Name */}
                 <div>
-                  <label style={{ display: "block", color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "12px", letterSpacing: "0.5px" }}>Business Name</label>
+                  <label style={{ display: "block", color: "#64748B", fontSize: "0.8rem", fontWeight: 600, marginBottom: "12px", letterSpacing: "0.5px" }}>Business Name</label>
                   <input
                     type="text"
                     placeholder='e.g. "Zenith Wellness Group"'
@@ -389,18 +389,18 @@ export default function Wizard() {
                     onChange={(e) => setFormData(prev => ({ ...prev, businessName: e.target.value }))}
                     style={{
                       width: "100%", padding: "16px 20px",
-                      background: "#14151a", border: "1px solid #1f222e",
-                      borderRadius: "12px", color: "white", fontSize: "1rem",
+                      background: "#ffffff", border: "1px solid #E2E8F0",
+                      borderRadius: "12px", color: "#0F172A", fontSize: "1rem",
                       outline: "none", fontFamily: "inherit",
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'var(--cyan-glow)'}
-                    onBlur={(e) => e.target.style.borderColor = '#1f222e'}
+                    onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+                    onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
                   />
                 </div>
 
                 {/* Industry Presets */}
                 <div>
-                  <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Industry Preset</h3>
+                  <h3 style={{ color: "#64748B", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Industry Preset</h3>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "10px" }}>
                     {industries.map((ind) => (
                       <button
@@ -418,7 +418,7 @@ export default function Wizard() {
 
                 {/* Template Style Selector */}
                 <div>
-                  <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Template Style</h3>
+                  <h3 style={{ color: "#64748B", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Template Style</h3>
                   <div style={{ display: "grid", gap: "16px" }} className="grid-cols-1 sm:grid-cols-3">
                     {templateStyles.map((ts) => {
                       const isSelected = formData.templateStyle === ts.value;
@@ -431,8 +431,8 @@ export default function Wizard() {
                             flexDirection: "column",
                             alignItems: "stretch",
                             padding: "0",
-                            borderColor: isSelected ? 'var(--cyan-glow)' : '#1f222e',
-                            background: isSelected ? 'rgba(0, 240, 255, 0.03)' : '#14151a',
+                            borderColor: isSelected ? 'var(--primary)' : '#E2E8F0',
+                            background: isSelected ? 'rgba(0,163,141,0.04)' : '#ffffff',
                             boxShadow: isSelected ? '0 0 20px rgba(0, 240, 255, 0.12) inset' : 'none',
                             overflow: 'hidden',
                             borderRadius: '14px',
@@ -442,29 +442,29 @@ export default function Wizard() {
                           <div style={{
                             height: '48px',
                             background: ts.preview,
-                            borderBottom: isSelected ? '2px solid var(--cyan-glow)' : '1px solid #1f222e',
+                            borderBottom: isSelected ? '2px solid var(--primary)' : '1px solid #E2E8F0',
                             position: 'relative',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}>
-                            {ts.icon === 'moon' && <Moon style={{ width: '20px', height: '20px', color: isSelected ? 'var(--cyan-glow)' : '#8888a0' }} />}
-                            {ts.icon === 'sun' && <Sun style={{ width: '20px', height: '20px', color: isSelected ? 'var(--cyan-glow)' : '#555' }} />}
-                            {ts.icon === 'book' && <BookOpen style={{ width: '20px', height: '20px', color: isSelected ? 'var(--cyan-glow)' : '#8a7e6e' }} />}
+                            {ts.icon === 'moon' && <Moon style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#8888a0' }} />}
+                            {ts.icon === 'sun' && <Sun style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#555' }} />}
+                            {ts.icon === 'book' && <BookOpen style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#8a7e6e' }} />}
                           </div>
                           {/* Label */}
                           <div style={{ padding: '16px' }}>
                             <span style={{
                               fontSize: "1rem", fontWeight: 600,
-                              color: isSelected ? "var(--cyan-glow)" : "#a1a3ab",
+                              color: isSelected ? "var(--primary)" : "#475569",
                               marginBottom: "8px", display: "block",
                             }}>{ts.label}</span>
-                            <span style={{ fontSize: "0.78rem", color: "#6b6e78", lineHeight: 1.5, display: "block" }}>{ts.desc}</span>
+                            <span style={{ fontSize: "0.78rem", color: "#94A3B8", lineHeight: 1.5, display: "block" }}>{ts.desc}</span>
                             {isSelected && (
                               <span style={{
                                 display: 'inline-block', marginTop: '10px',
-                                fontSize: '0.7rem', background: 'var(--cyan-glow)',
-                                color: '#000', borderRadius: '99px',
+                                fontSize: '0.7rem', background: 'var(--primary)',
+                                color: '#ffffff', borderRadius: '99px',
                                 padding: '2px 10px', fontWeight: 700,
                               }}>✓ Selected</span>
                             )}
@@ -478,7 +478,7 @@ export default function Wizard() {
 
               {/* Mood Selector */}
               <div>
-                <label style={{ display: "block", color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "20px", letterSpacing: "0.5px" }}>Content Personality</label>
+                <label style={{ display: "block", color: "#64748B", fontSize: "0.8rem", fontWeight: 600, marginBottom: "20px", letterSpacing: "0.5px" }}>Content Personality</label>
                 <div style={{ display: "grid", gap: "16px" }} className="grid-cols-1 sm:grid-cols-3">
                   {moods.map((m) => (
                     <button
@@ -487,13 +487,13 @@ export default function Wizard() {
                       className="industry-btn cursor-pointer"
                       style={{
                         flexDirection: "column", alignItems: "flex-start", padding: "24px",
-                        borderColor: formData.mood === m.id ? 'var(--cyan-glow)' : '#1f222e',
-                        background: formData.mood === m.id ? 'rgba(0, 240, 255, 0.03)' : '#14151a',
-                        boxShadow: formData.mood === m.id ? '0 0 15px rgba(0, 240, 255, 0.1) inset' : 'none',
+                        borderColor: formData.mood === m.id ? 'var(--primary)' : '#E2E8F0',
+                        background: formData.mood === m.id ? 'rgba(0,163,141,0.04)' : '#ffffff',
+                        boxShadow: formData.mood === m.id ? '0 0 15px rgba(0,163,141,0.08) inset' : 'none',
                       }}
                     >
-                      <span style={{ fontSize: "1rem", fontWeight: 600, color: formData.mood === m.id ? "var(--cyan-glow)" : "#a1a3ab", marginBottom: "8px", display: "block" }}>{m.label}</span>
-                      <span style={{ fontSize: "0.8rem", color: "#6b6e78", lineHeight: 1.5 }}>{m.desc}</span>
+                      <span style={{ fontSize: "1rem", fontWeight: 600, color: formData.mood === m.id ? "var(--primary)" : "#475569", marginBottom: "8px", display: "block" }}>{m.label}</span>
+                      <span style={{ fontSize: "0.8rem", color: "#94A3B8", lineHeight: 1.5 }}>{m.desc}</span>
                     </button>
                   ))}
                 </div>
@@ -506,17 +506,17 @@ export default function Wizard() {
                   <div className="upload-area" style={{ width: "100%", minHeight: "250px" }}
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <h3 style={{ fontSize: "1.15rem", color: "white", fontWeight: 500, marginBottom: "20px", position: "relative", zIndex: 10 }}>Upload Your Brand Logo</h3>
+                    <h3 style={{ fontSize: "1.15rem", color: "#0F172A", fontWeight: 500, marginBottom: "20px", position: "relative", zIndex: 10 }}>Upload Your Brand Logo</h3>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, position: "relative", zIndex: 10 }}>
                       {formData.logoUrl ? (
                         <img src={formData.logoUrl} alt="Logo" style={{ maxHeight: "80px", marginBottom: "16px" }} />
                       ) : (
-                        <FileUp style={{ width: "56px", height: "56px", color: "var(--cyan-glow)", marginBottom: "20px", filter: "drop-shadow(0 0 12px rgba(0,240,255,0.8))" }} />
+                        <FileUp style={{ width: "56px", height: "56px", color: "var(--primary)", marginBottom: "20px", filter: "drop-shadow(0 0 12px rgba(0,163,141,0.5))" }} />
                       )}
-                      <p style={{ fontSize: "1.1rem", color: "white", fontWeight: 500, marginBottom: "8px" }}>
+                      <p style={{ fontSize: "1.1rem", color: "#0F172A", fontWeight: 500, marginBottom: "8px" }}>
                         {formData.logoUrl ? 'Logo uploaded!' : 'Upload Logo'}
                       </p>
-                      <p style={{ color: "#8b8e98", fontSize: "0.85rem", maxWidth: "220px", textAlign: "center", marginBottom: "32px", lineHeight: 1.6 }}>
+                      <p style={{ color: "#64748B", fontSize: "0.85rem", maxWidth: "220px", textAlign: "center", marginBottom: "32px", lineHeight: 1.6 }}>
                         {formData.logoUrl ? 'Click to change' : <>Drop your logo here or browse<br/>[PNG, SVG, JPG. Max 5MB]</>}
                       </p>
                       {!formData.logoUrl && <button className="upload-btn">Upload Logo</button>}
@@ -532,15 +532,15 @@ export default function Wizard() {
 
                   {/* Extracted color feedback */}
                   {extracting && (
-                    <p style={{ color: "var(--cyan-glow)", marginTop: "16px", fontSize: "0.85rem", animation: "pulse 1.5s ease-in-out infinite" }}>
+                    <p style={{ color: "var(--primary)", marginTop: "16px", fontSize: "0.85rem", animation: "pulse 1.5s ease-in-out infinite" }}>
                       Analyzing brand palette...
                     </p>
                   )}
                   {formData.extractedColor && !extracting && formData.logoUrl && (
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "16px" }}>
-                      <div style={{ width: "24px", height: "24px", borderRadius: "6px", backgroundColor: formData.extractedColor, border: "1px solid rgba(255,255,255,0.2)" }}></div>
-                      <p style={{ fontSize: "0.85rem", fontWeight: 500, color: "#a1a3ab" }}>
-                        Brand color detected: <span style={{ color: "var(--cyan-glow)", textTransform: "uppercase" }}>{formData.extractedColor}</span>
+                      <div style={{ width: "24px", height: "24px", borderRadius: "6px", backgroundColor: formData.extractedColor, border: "1px solid rgba(0,0,0,0.1)" }}></div>
+                      <p style={{ fontSize: "0.85rem", fontWeight: 500, color: "#475569" }}>
+                        Brand color detected: <span style={{ color: "var(--primary)", textTransform: "uppercase" }}>{formData.extractedColor}</span>
                       </p>
                     </div>
                   )}
@@ -548,7 +548,7 @@ export default function Wizard() {
 
                 {/* Palette Picker */}
                 <div>
-                  <h3 style={{ color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Choose a Color Palette</h3>
+                  <h3 style={{ color: "#64748B", fontSize: "0.8rem", fontWeight: 600, marginBottom: "16px", paddingLeft: "4px", letterSpacing: "0.5px" }}>Choose a Color Palette</h3>
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
@@ -562,13 +562,13 @@ export default function Wizard() {
                           onClick={() => setFormData(prev => ({ ...prev, activePalette: p }))}
                           style={{
                             appearance: 'none', border: 'none', cursor: 'pointer',
-                            background: isSelected ? 'rgba(0,240,255,0.05)' : '#14151a',
+                            background: isSelected ? 'rgba(0,163,141,0.06)' : '#ffffff',
                             borderRadius: '14px',
                             padding: '14px',
-                            outline: isSelected ? '2px solid var(--cyan-glow)' : '1px solid #1f222e',
+                            outline: isSelected ? '2px solid var(--primary)' : '1px solid #E2E8F0',
                             transition: 'all 0.2s',
                             textAlign: 'left',
-                            boxShadow: isSelected ? '0 0 16px rgba(0,240,255,0.15) inset' : 'none',
+                            boxShadow: isSelected ? '0 0 16px rgba(0,163,141,0.12) inset' : 'none',
                           }}
                         >
                           <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', height: '44px', marginBottom: '10px' }}>
@@ -577,11 +577,11 @@ export default function Wizard() {
                             ))}
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <span style={{ fontSize: '0.82rem', fontWeight: 600, color: isSelected ? 'var(--cyan-glow)' : '#a1a3ab' }}>
+                            <span style={{ fontSize: '0.82rem', fontWeight: 600, color: isSelected ? 'var(--primary)' : '#475569' }}>
                               {p.name}
                             </span>
                             {isSelected && (
-                              <span style={{ fontSize: '0.7rem', background: 'var(--cyan-glow)', color: '#000', borderRadius: '99px', padding: '2px 8px', fontWeight: 700 }}>✓ Selected</span>
+                              <span style={{ fontSize: '0.7rem', background: 'var(--primary)', color: '#ffffff', borderRadius: '99px', padding: '2px 8px', fontWeight: 700 }}>✓ Selected</span>
                             )}
                           </div>
                         </button>
@@ -589,12 +589,12 @@ export default function Wizard() {
                     })}
                   </div>
                   {formData.activePalette && (
-                    <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: '#0c0e14', borderRadius: '10px', border: '1px solid #1f222e' }}>
-                      <span style={{ fontSize: '0.8rem', color: '#8b8e98' }}>Active palette:</span>
+                    <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', background: '#F8FAFC', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Active palette:</span>
                       {formData.activePalette.colors.map((hex, i) => (
                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: hex, border: '1px solid rgba(255,255,255,0.1)' }} />
-                          <span style={{ fontSize: '0.72rem', color: '#6b6e78', fontFamily: 'monospace' }}>{hex}</span>
+                          <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: hex, border: '1px solid rgba(0,0,0,0.06)' }} />
+                          <span style={{ fontSize: '0.72rem', color: '#94A3B8', fontFamily: 'monospace' }}>{hex}</span>
                         </div>
                       ))}
                     </div>
@@ -609,10 +609,10 @@ export default function Wizard() {
         {step === 2 && (
           <div>
             <div style={{ textAlign: "center", marginBottom: "56px" }}>
-              <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-white mb-3 leading-tight text-balance">
+              <h2 className="text-2xl sm:text-[1.75rem] font-semibold text-slate-900 mb-3 leading-tight text-balance">
                 Step 2: Review & Generate
               </h2>
-              <p className="text-[#8b8e98] text-base text-balance">Confirm your choices and enter your email to receive the demo link.</p>
+              <p className="text-[#64748B] text-base text-balance">Confirm your choices and enter your email to receive the demo link.</p>
             </div>
 
             {/* Summary Grid */}
@@ -623,20 +623,20 @@ export default function Wizard() {
                 { label: 'Template Style', value: templateStyles.find(ts => ts.value === formData.templateStyle)?.label || '☀️ Standard' },
                 { label: 'Personality', value: moods.find(m => m.id === formData.mood)?.label || '—' },
               ].map((item) => (
-                <div key={item.label} style={{ background: "#14151a", border: "1px solid #1f222e", borderRadius: "12px", padding: "16px 20px" }}>
-                  <div style={{ fontSize: "0.75rem", color: "#6b6e78", fontWeight: 600, marginBottom: "6px", textTransform: "uppercase", letterSpacing: "1px" }}>{item.label}</div>
-                  <div style={{ fontSize: "1rem", color: "white", fontWeight: 500 }}>{item.value}</div>
+                <div key={item.label} style={{ background: "#ffffff", border: "1px solid #E2E8F0", borderRadius: "12px", padding: "16px 20px" }}>
+                  <div style={{ fontSize: "0.75rem", color: "#94A3B8", fontWeight: 600, marginBottom: "6px", textTransform: "uppercase", letterSpacing: "1px" }}>{item.label}</div>
+                  <div style={{ fontSize: "1rem", color: "#0F172A", fontWeight: 500 }}>{item.value}</div>
                 </div>
               ))}
               {/* Palette summary card */}
               {formData.activePalette && (
-                <div style={{ background: "#14151a", border: "1px solid #1f222e", borderRadius: "12px", padding: "16px 20px", gridColumn: 'span 2' }}>
-                  <div style={{ fontSize: "0.75rem", color: "#6b6e78", fontWeight: 600, marginBottom: "10px", textTransform: "uppercase", letterSpacing: "1px" }}>Color Palette</div>
+                <div style={{ background: "#ffffff", border: "1px solid #E2E8F0", borderRadius: "12px", padding: "16px 20px", gridColumn: 'span 2' }}>
+                  <div style={{ fontSize: "0.75rem", color: "#94A3B8", fontWeight: 600, marginBottom: "10px", textTransform: "uppercase", letterSpacing: "1px" }}>Color Palette</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div style={{ display: 'flex', borderRadius: '6px', overflow: 'hidden', height: '28px', width: '120px', flexShrink: 0 }}>
                       {formData.activePalette.colors.map((hex, i) => <div key={i} style={{ flex: 1, background: hex }} />)}
                     </div>
-                    <span style={{ fontSize: '0.95rem', color: 'white', fontWeight: 500 }}>{formData.activePalette.name}</span>
+                    <span style={{ fontSize: '0.95rem', color: '#0F172A', fontWeight: 500 }}>{formData.activePalette.name}</span>
                   </div>
                 </div>
               )}
@@ -644,10 +644,10 @@ export default function Wizard() {
 
             {/* Email Input */}
             <div style={{ maxWidth: "500px", margin: "0 auto" }}>
-              <label style={{ display: "block", color: "#8b8e98", fontSize: "0.8rem", fontWeight: 600, marginBottom: "12px", letterSpacing: "0.5px" }}>Email Address</label>
+              <label style={{ display: "block", color: "#64748B", fontSize: "0.8rem", fontWeight: 600, marginBottom: "12px", letterSpacing: "0.5px" }}>Email Address</label>
               <div style={{ display: "flex", gap: "12px" }}>
                 <div style={{ position: "relative", flex: 1 }}>
-                  <Mail style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", width: "18px", height: "18px", color: "#6b6e78" }} />
+                  <Mail style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", width: "18px", height: "18px", color: "#94A3B8" }} />
                   <input
                     type="email"
                     placeholder="you@company.com"
@@ -655,12 +655,12 @@ export default function Wizard() {
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                     style={{
                       width: "100%", padding: "16px 20px 16px 48px",
-                      background: "#14151a", border: "1px solid #1f222e",
-                      borderRadius: "12px", color: "white", fontSize: "1rem",
+                      background: "#ffffff", border: "1px solid #E2E8F0",
+                      borderRadius: "12px", color: "#0F172A", fontSize: "1rem",
                       outline: "none", fontFamily: "inherit",
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'var(--cyan-glow)'}
-                    onBlur={(e) => e.target.style.borderColor = '#1f222e'}
+                    onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+                    onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
                   />
                 </div>
               </div>
@@ -669,13 +669,13 @@ export default function Wizard() {
         )}
 
         {/* ============ NAVIGATION BUTTONS ============ */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "40px", borderTop: "1px solid #1f222e", paddingTop: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "40px", borderTop: "1px solid #E2E8F0", paddingTop: "20px" }}>
           <button
             onClick={handleBack}
             className="appearance-none outline-none border-none cursor-pointer"
             style={{
               display: "flex", alignItems: "center", gap: "8px",
-              color: step === 1 ? "#3a3d46" : "#a1a3ab",
+              color: step === 1 ? "#CBD5E1" : "#475569",
               background: "transparent", fontSize: "0.9rem", fontWeight: 500,
               pointerEvents: step === 1 ? "none" : "auto",
               fontFamily: "inherit",
