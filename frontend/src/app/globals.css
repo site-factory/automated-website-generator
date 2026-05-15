@@ -215,6 +215,119 @@ body {
   border-radius: 6px;
 }
 
+.marketing-page {
+  min-height: 100vh;
+  position: relative;
+  background: var(--background);
+}
+
+.marketing-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(14px);
+}
+
+.marketing-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.marketing-brand-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--primary);
+}
+
+.marketing-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.marketing-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.marketing-links a.active,
+.marketing-links a:hover {
+  color: var(--primary);
+}
+
+.marketing-cta {
+  text-decoration: none;
+}
+
+.marketing-hero {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 3rem;
+  text-align: center;
+}
+
+.marketing-hero h1 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.marketing-hero p {
+  color: var(--text-body);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.marketing-grid {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.surface-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.muted {
+  color: var(--text-body);
+}
+
+@media (max-width: 760px) {
+  .marketing-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .marketing-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+}
+
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

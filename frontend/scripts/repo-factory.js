@@ -93,16 +93,108 @@ async function generateDemo(data) {
                     content = content.split('assets/brand-logo.png').join(data.logoUrl);
                 }
 
-                // Inject floating CTA into HTML files
+                // Inject a persistent WhatsApp footer into HTML files
                 if (ext === '.html') {
+                    const ownerWhatsApp = (process.env.OWNER_WHATSAPP_NUMBER || '').replace(/\D/g, '');
+                    const whatsappHref = ownerWhatsApp
+                        ? `https://wa.me/${ownerWhatsApp}?text=${encodeURIComponent(`Hi, I want to claim the demo website for ${companyName}. Demo ID: ${demoId}`)}`
+                        : `${data.baseUrl || 'https://automated-website-generator.vercel.app'}/contact`;
                     const floatingCTA = `
-    <!-- AI SiteSpark Floating CTA -->
-    <div style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); border: 1px solid rgba(0,240,255,0.3); padding: 16px 24px; border-radius: 12px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 16px; font-family: sans-serif;">
-        <div style="color: white; text-align: left;">
-            <p style="margin: 0; font-size: 0.8rem; color: #a1a3ab; margin-bottom: 4px;">Demo built by AI SiteSpark</p>
-            <p style="margin: 0; font-size: 1rem; font-weight: 600;">Love this website?</p>
+    <!-- AI SiteSpark Shared Template Upgrade -->
+    <style>
+      .aisitespark-conversion-band {
+        margin: 72px auto 32px;
+        max-width: 1100px;
+        padding: 0 24px;
+      }
+      .aisitespark-conversion-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        border-radius: 20px;
+        padding: 24px;
+        background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(30,41,59,0.92));
+        color: #ffffff;
+        box-shadow: 0 20px 50px rgba(15,23,42,0.18);
+      }
+      .aisitespark-conversion-card strong { display: block; font-size: 1.15rem; margin-bottom: 6px; }
+      .aisitespark-conversion-card span { display: block; color: rgba(255,255,255,0.72); line-height: 1.5; }
+      .aisitespark-conversion-card a {
+        flex-shrink: 0;
+        text-decoration: none;
+        color: #ffffff;
+        background: #16a34a;
+        padding: 12px 18px;
+        border-radius: 999px;
+        font-weight: 700;
+      }
+      img { max-width: 100%; height: auto; }
+      @media (max-width: 640px) {
+        .aisitespark-conversion-card {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .aisitespark-conversion-card a { text-align: center; }
+      }
+    </style>
+    <section class="aisitespark-conversion-band">
+      <div class="aisitespark-conversion-card">
+        <div>
+          <strong>Want this site launched for ${companyName}?</strong>
+          <span>Move from preview to a fully owned website with hosting, domain setup, and final customisation.</span>
         </div>
-        <a href="${data.baseUrl || 'https://automated-website-generator.vercel.app'}/claim?demo=${demoId}" target="_blank" style="background: #00f0ff; color: #000; text-decoration: none; padding: 10px 20px; border-radius: 99px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; box-shadow: 0 0 15px rgba(0,240,255,0.4);">Claim It Now</a>
+        <a href="${whatsappHref}" target="_blank" rel="noopener noreferrer">Talk on WhatsApp</a>
+      </div>
+    </section>
+    <!-- AI SiteSpark Demo Mode Footer -->
+    <style>
+      body { padding-bottom: 88px; }
+      .aisitespark-demo-footer {
+        position: fixed;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: rgba(15, 23, 42, 0.92);
+        color: #ffffff;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
+        backdrop-filter: blur(14px);
+        font-family: Arial, sans-serif;
+      }
+      .aisitespark-demo-footer strong { display: block; font-size: 0.95rem; }
+      .aisitespark-demo-footer span { display: block; color: rgba(255,255,255,0.72); font-size: 0.8rem; margin-top: 2px; }
+      .aisitespark-demo-footer a {
+        flex-shrink: 0;
+        color: #ffffff;
+        background: #16a34a;
+        text-decoration: none;
+        border-radius: 999px;
+        padding: 11px 16px;
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+      @media (max-width: 640px) {
+        body { padding-bottom: 124px; }
+        .aisitespark-demo-footer {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .aisitespark-demo-footer a { text-align: center; }
+      }
+    </style>
+    <div class="aisitespark-demo-footer">
+      <div>
+        <strong>Demo Mode</strong>
+        <span>This preview was generated for ${companyName}.</span>
+      </div>
+      <a href="${whatsappHref}" target="_blank" rel="noopener noreferrer">Contact on WhatsApp</a>
     </div>
 </body>`;
                     content = content.replace('</body>', floatingCTA);
@@ -135,7 +227,7 @@ async function generateDemo(data) {
 
     process.stdout.write(`DEMO_PATH:${targetDir}\n`);
     console.log('Demo generated Successfully!');
-    return { targetDir, demoId, githubUrl, pagesUrl };
+    return { targetDir, demoId, githubUrl, pagesUrl, repoName: demoId };
 }
 
 async function deployToGithub(targetDir, repoName, token, orgName) {
