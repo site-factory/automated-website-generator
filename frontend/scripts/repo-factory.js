@@ -1,11 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { industries } = require('../templates/shared/template-data');
 
 async function generateDemo(data) {
     const timestamp = Date.now();
     const companyName = data.businessName || data.companyName || 'Demo Website';
     data.companyName = companyName; // Ensure companyName is available for template replacement
+    data.businessPhone = data.businessPhone || 'Add your phone number';
+    data.businessEmail = data.businessEmail || 'hello@example.com';
+    data.businessLocation = data.businessLocation || 'Add your business address';
     const demoId = companyName.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + timestamp;
     
     // On Vercel, we can only write to /tmp.
@@ -209,6 +213,7 @@ async function generateDemo(data) {
     }
 
     copyAndReplace(templateDir, targetDir);
+    applySharedUpgrade(templateBase, styleSuffix, data, targetDir, demoId);
 
     // 3. Deploy to GitHub (if token is provided)
     let githubUrl = null;
@@ -228,6 +233,127 @@ async function generateDemo(data) {
     process.stdout.write(`DEMO_PATH:${targetDir}\n`);
     console.log('Demo generated Successfully!');
     return { targetDir, demoId, githubUrl, pagesUrl, repoName: demoId };
+}
+
+function applySharedUpgrade(templateBase, styleSuffix, data, targetDir, demoId) {
+    const industry = industries[templateBase];
+    if (!industry) return;
+
+    const sharedDir = path.join(process.cwd(), 'templates', 'shared');
+    copyDirectory(path.join(sharedDir, 'assets', templateBase), path.join(targetDir, 'assets', templateBase));
+    copyDirectory(path.join(sharedDir, 'styles'), path.join(targetDir, 'styles'));
+
+    const template = buildSharedTemplate(templateBase, styleSuffix, data, industry, demoId);
+    fs.writeFileSync(path.join(targetDir, 'index.html'), template);
+}
+
+function copyDirectory(src, dest) {
+    if (!fs.existsSync(src)) return;
+    fs.mkdirSync(dest, { recursive: true });
+    fs.readdirSync(src).forEach((entry) => {
+        const from = path.join(src, entry);
+        const to = path.join(dest, entry);
+        if (fs.statSync(from).isDirectory()) copyDirectory(from, to);
+        else fs.copyFileSync(from, to);
+    });
+}
+
+function buildSharedTemplate(templateBase, styleSuffix, data, industry, demoId) {
+    const companyName = data.companyName;
+    const brandMarkup = data.logoUrl && data.logoUrl.startsWith('data:image')
+        ? `<img class="brand-logo" src="${data.logoUrl}" alt="${companyName} logo">`
+        : companyName;
+    const variantClass = styleSuffix === 'v2' ? 'variant-showcase' : styleSuffix === 'v3' ? 'variant-lead' : 'variant-local';
+    const primaryCta = styleSuffix === 'v3' ? 'Request Enquiry' : 'Contact Us';
+    const ownerWhatsApp = (process.env.OWNER_WHATSAPP_NUMBER || '').replace(/\D/g, '');
+    const whatsappHref = ownerWhatsApp
+        ? `https://wa.me/${ownerWhatsApp}?text=${encodeURIComponent(`Hi, I want to claim the demo website for ${companyName}. Demo ID: ${demoId}`)}`
+        : `${data.baseUrl || 'https://automated-website-generator.vercel.app'}/contact`;
+    const serviceCards = industry.services.map((service) => `<article class="card"><h3>${service}</h3><p>Clear, relevant information that helps visitors decide the next step.</p></article>`).join('');
+    const proofCards = industry.proof.map((item) => `<article class="card"><h3>${item}</h3><p>Credible signals that support trust without inventing unverifiable claims.</p></article>`).join('');
+    const leadBlock = styleSuffix === 'v3'
+        ? `<aside class="lead-form"><label>Name</label><input placeholder="Your name"><label>Phone</label><input placeholder="Phone number"><label>Message</label><textarea rows="4" placeholder="Tell us what you need"></textarea><a class="btn btn-primary" href="#contact">Send enquiry</a></aside>`
+        : `<div class="hero-media"><img src="${industry.image}" alt="${templateBase} hero"></div>`;
+    const mediaBlock = styleSuffix === 'v3'
+        ? `<div class="hero-media"><img src="${industry.image}" alt="${templateBase} hero"></div>`
+        : '';
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${companyName}</title>
+  <link rel="stylesheet" href="styles/system.css">
+</head>
+<body class="${variantClass}">
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#">${brandMarkup}</a>
+      <div class="links">
+        <a href="#services">Services</a>
+        <a href="#why-us">Why us</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">${industry.eyebrow}</div>
+          <h1>${industry.headline}</h1>
+          <p class="lead">${industry.lead}</p>
+          <div class="actions"><a class="btn btn-primary" href="#contact">${primaryCta}</a><a class="btn btn-secondary" href="#services">Explore services</a></div>
+        </div>
+        ${leadBlock}
+      </div>
+    </section>
+    ${mediaBlock}
+    <section id="services" class="section">
+      <div class="container">
+        <div class="section-head"><h2>What ${companyName} can present clearly</h2><p>${industry.secondary}</p></div>
+        <div class="cards">${serviceCards}</div>
+      </div>
+    </section>
+    <section id="why-us" class="band">
+      <div class="container split">
+        <img src="${industry.image}" alt="${templateBase} support">
+        <div>
+          <div class="section-head"><h2>Built to answer buyer questions early</h2><p>Instead of filler claims, this page structure gives visitors the information they need to trust the business and act.</p></div>
+          <div class="cards">${proofCards}</div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><h2>Common questions</h2><p>Practical detail reduces drop-off and makes the business feel easier to contact.</p></div>
+        <div class="faq-grid">
+          <article class="card"><h3>What should a visitor do first?</h3><p>Use a clear CTA tied to the service type and business goal.</p></article>
+          <article class="card"><h3>What information matters most?</h3><p>Services, process, contact details, and enough proof to reduce hesitation.</p></article>
+        </div>
+      </div>
+    </section>
+    <section id="contact" class="band">
+      <div class="container contact-grid">
+        <div>
+          <div class="section-head"><h2>Start the conversation</h2><p>Use this section for phone, WhatsApp, address, timings, or an enquiry path that matches the business.</p></div>
+        </div>
+        <div class="contact-panel"><h3>${companyName}</h3><p>Phone: ${data.businessPhone}</p><p>Email: ${data.businessEmail}</p><p>Location: ${data.businessLocation}</p><a class="btn btn-primary" href="#">${primaryCta}</a></div>
+      </div>
+    </section>
+  </main>
+  <section class="band">
+    <div class="container contact-grid">
+      <div>
+        <div class="section-head"><h2>Want this site launched for ${companyName}?</h2><p>Move from preview to a fully owned website with final content, domain setup, and launch support.</p></div>
+      </div>
+      <div class="contact-panel"><h3>Demo Mode</h3><p>This preview was generated for ${companyName}.</p><a class="btn btn-primary" href="${whatsappHref}" target="_blank" rel="noopener noreferrer">Contact on WhatsApp</a></div>
+    </div>
+  </section>
+  <footer class="footer"><div class="container">&copy; 2026 ${companyName}. All rights reserved.</div></footer>
+</body>
+</html>`;
 }
 
 async function deployToGithub(targetDir, repoName, token, orgName) {
