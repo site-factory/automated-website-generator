@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import Wizard from '@/components/Wizard';
-import { Brain } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -14,7 +13,7 @@ export default function Home() {
       {/* Navbar */}
       <nav className="w-full max-w-7xl px-4 sm:px-8 py-6 sm:py-8 flex justify-between items-center z-50">
         <div className="flex items-center gap-3">
-          <Brain className="w-8 h-8" style={{ color: '#00A38D' }} />
+          <img src="/brandmark.png" alt="AI SiteSpark" className="w-9 h-9 rounded-lg" />
           <span className="text-[1.35rem] font-bold tracking-wide" style={{ color: '#0F172A' }}>AI SiteSpark</span>
         </div>
         <div className="hidden md:flex gap-10 text-[0.95rem] font-medium" style={{ color: '#64748B' }}>
@@ -29,7 +28,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="text-center mt-10 sm:mt-16 md:mt-20 mb-10 sm:mb-16 z-10 w-full px-4">
         <h1 className="text-[2.25rem] sm:text-[3.5rem] md:text-[4.5rem] font-bold tracking-tight leading-[1.15]" style={{ color: '#0F172A' }}>
-          Build Your Perfect Website<br className="hidden sm:inline" />{" "}in Minutes.
+          See Your Business Online<br className="hidden sm:inline" />{" "}in 60 Seconds
         </h1>
       </section>
 
