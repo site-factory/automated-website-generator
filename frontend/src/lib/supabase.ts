@@ -20,6 +20,7 @@ interface LeadRecord extends LeadInsertInput {
   demoUrl: string | null;
   githubRepoUrl: string | null;
   githubRepoName: string | null;
+  notes: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -97,6 +98,32 @@ export async function updateLeadGeneration(
   return normalizeLead(lead);
 }
 
+export async function listLeads(): Promise<LeadRecord[]> {
+  const leads = await supabaseRequest<LeadRow[]>(
+    'leads?select=*&order=created_at.desc',
+    { method: 'GET' },
+  );
+
+  return leads.map(normalizeLead);
+}
+
+export async function updateLeadAdmin(
+  id: string,
+  data: { status?: LeadStatus; notes?: string | null },
+): Promise<LeadRecord> {
+  const [lead] = await supabaseRequest<LeadRow[]>(`leads?id=eq.${id}`, {
+    method: 'PATCH',
+    headers: { Prefer: 'return=representation' },
+    body: JSON.stringify({
+      ...(data.status ? { status: data.status } : {}),
+      ...(data.notes !== undefined ? { notes: data.notes } : {}),
+      updated_at: new Date().toISOString(),
+    }),
+  });
+
+  return normalizeLead(lead);
+}
+
 function normalizeLead(raw: LeadRow): LeadRecord {
   return {
     id: String(raw.id),
@@ -115,6 +142,7 @@ function normalizeLead(raw: LeadRow): LeadRecord {
     demoUrl: raw.demo_url ? String(raw.demo_url) : null,
     githubRepoUrl: raw.github_repo_url ? String(raw.github_repo_url) : null,
     githubRepoName: raw.github_repo_name ? String(raw.github_repo_name) : null,
+    notes: raw.notes ? String(raw.notes) : null,
     createdAt: String(raw.created_at),
     updatedAt: String(raw.updated_at),
   };

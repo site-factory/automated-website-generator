@@ -16,6 +16,7 @@ create table if not exists public.leads (
   demo_url text,
   github_repo_url text,
   github_repo_name text,
+  notes text,
   status public.lead_status not null default 'new',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
