@@ -8,7 +8,18 @@ const retentionDays = 30;
 
 function cleanupDue(lead: LeadRecord) {
   const ageMs = Date.now() - new Date(lead.createdAt).getTime();
-  return lead.status !== 'converted' && ageMs > retentionDays * 24 * 60 * 60 * 1000;
+  return lead.status !== 'converted'
+    && lead.cleanupStatus === 'active'
+    && ageMs > retentionDays * 24 * 60 * 60 * 1000;
+}
+
+function cleanupLabel(lead: LeadRecord) {
+  if (lead.status === 'converted') return <><ShieldCheck size={14} /> protected</>;
+  if (lead.cleanupStatus === 'deleted') return <><Trash2 size={14} /> deleted</>;
+  if (lead.cleanupStatus === 'skipped') return 'skipped';
+  if (lead.cleanupStatus === 'failed') return 'failed';
+  if (cleanupDue(lead)) return <><Trash2 size={14} /> cleanup due</>;
+  return 'safe';
 }
 
 export default function AdminPage() {
@@ -169,7 +180,7 @@ export default function AdminPage() {
                   onChange={(event) => setLeads((current) => current.map((item) => item.id === lead.id ? { ...item, notes: event.target.value } : item))}
                 />
                 <span className={cleanupDue(lead) ? 'admin-risk due' : 'admin-risk safe'}>
-                  {lead.status === 'converted' ? <><ShieldCheck size={14} /> protected</> : cleanupDue(lead) ? <><Trash2 size={14} /> cleanup due</> : 'safe'}
+                  {cleanupLabel(lead)}
                 </span>
               </div>
             ))}

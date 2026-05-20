@@ -16,11 +16,19 @@ create table if not exists public.leads (
   demo_url text,
   github_repo_url text,
   github_repo_name text,
+  github_repo_id bigint,
+  cleanup_status text not null default 'active',
+  deleted_at timestamptz,
   notes text,
   status public.lead_status not null default 'new',
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  constraint leads_cleanup_status_check
+    check (cleanup_status in ('active', 'deleted', 'skipped', 'failed'))
 );
 
 create index if not exists leads_status_created_at_idx
   on public.leads (status, created_at);
+
+create index if not exists leads_cleanup_lookup_idx
+  on public.leads (status, cleanup_status, created_at);

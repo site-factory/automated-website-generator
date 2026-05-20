@@ -49,6 +49,7 @@ export async function POST(request: Request) {
       demoUrl: finalDemoUrl,
       githubRepoUrl: result.githubUrl || null,
       githubRepoName: result.repoName || null,
+      githubRepoId: result.githubRepoId || null,
     });
 
     return NextResponse.json({ 

@@ -20,6 +20,9 @@ interface LeadRecord extends LeadInsertInput {
   demoUrl: string | null;
   githubRepoUrl: string | null;
   githubRepoName: string | null;
+  githubRepoId: number | null;
+  cleanupStatus: 'active' | 'deleted' | 'skipped' | 'failed';
+  deletedAt: string | null;
   notes: string | null;
   createdAt: string;
   updatedAt: string;
@@ -81,7 +84,13 @@ export async function createLead(input: LeadInsertInput): Promise<LeadRecord> {
 
 export async function updateLeadGeneration(
   id: string,
-  data: { demoId: string; demoUrl: string | null; githubRepoUrl: string | null; githubRepoName: string | null },
+  data: {
+    demoId: string;
+    demoUrl: string | null;
+    githubRepoUrl: string | null;
+    githubRepoName: string | null;
+    githubRepoId?: number | null;
+  },
 ): Promise<LeadRecord> {
   const [lead] = await supabaseRequest<LeadRow[]>(`leads?id=eq.${id}`, {
     method: 'PATCH',
@@ -91,6 +100,8 @@ export async function updateLeadGeneration(
       demo_url: data.demoUrl,
       github_repo_url: data.githubRepoUrl,
       github_repo_name: data.githubRepoName,
+      github_repo_id: data.githubRepoId ?? null,
+      cleanup_status: 'active',
       updated_at: new Date().toISOString(),
     }),
   });
@@ -142,6 +153,9 @@ function normalizeLead(raw: LeadRow): LeadRecord {
     demoUrl: raw.demo_url ? String(raw.demo_url) : null,
     githubRepoUrl: raw.github_repo_url ? String(raw.github_repo_url) : null,
     githubRepoName: raw.github_repo_name ? String(raw.github_repo_name) : null,
+    githubRepoId: raw.github_repo_id ? Number(raw.github_repo_id) : null,
+    cleanupStatus: (raw.cleanup_status || 'active') as LeadRecord['cleanupStatus'],
+    deletedAt: raw.deleted_at ? String(raw.deleted_at) : null,
     notes: raw.notes ? String(raw.notes) : null,
     createdAt: String(raw.created_at),
     updatedAt: String(raw.updated_at),
