@@ -17,9 +17,9 @@ async function generateDemo(data) {
     const targetDir = path.join(os.tmpdir(), 'demos', demoId);
     
     // Select template based on industry and style variant
-    // templateStyle: 'v1' (standard), 'v2' (modern/dark), 'v3' (classic/elegant)
+    // templateStyle: v1-v3 are conversion-grade basics; v4-v6 add richer visual systems.
     const templateStyle = data.templateStyle || 'v1';
-    const validStyles = ['v1', 'v2', 'v3'];
+    const validStyles = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
     const styleSuffix = validStyles.includes(templateStyle) ? templateStyle : 'v1';
 
     let templateBase = 'professional';
@@ -44,8 +44,14 @@ async function generateDemo(data) {
     // Fallback: if the requested style doesn't exist on disk, fall back to v1
     let templateDir = path.join(workingDir, 'templates', templateName);
     if (!fs.existsSync(templateDir)) {
-        console.log(`Template ${templateName} not found, falling back to ${templateBase}-v1`);
-        templateDir = path.join(workingDir, 'templates', `${templateBase}-v1`);
+        const fallbackTemplateDir = path.join(workingDir, 'templates', `${templateBase}-v1`);
+        if (!fs.existsSync(fallbackTemplateDir)) {
+            throw new Error(`Template ${templateName} and fallback ${templateBase}-v1 were not found`);
+        }
+        if (!['v4', 'v5', 'v6'].includes(styleSuffix)) {
+            console.log(`Template ${templateName} not found, falling back to ${templateBase}-v1`);
+        }
+        templateDir = fallbackTemplateDir;
     }
 
     console.log('Generating demo: ' + demoId + ' using template: ' + templateName);
@@ -265,19 +271,36 @@ function buildSharedTemplate(templateBase, styleSuffix, data, industry, demoId) 
     const brandMarkup = data.logoUrl && data.logoUrl.startsWith('data:image')
         ? `<img class="brand-logo" src="${data.logoUrl}" alt="${companyName} logo">`
         : companyName;
-    const variantClass = styleSuffix === 'v2' ? 'variant-showcase' : styleSuffix === 'v3' ? 'variant-lead' : 'variant-local';
-    const primaryCta = styleSuffix === 'v3' ? 'Request Enquiry' : 'Contact Us';
+    const variantClassMap = {
+        v1: 'variant-local',
+        v2: 'variant-showcase',
+        v3: 'variant-lead',
+        v4: 'variant-motion',
+        v5: 'variant-editorial',
+        v6: 'variant-immersive',
+    };
+    const variantClass = variantClassMap[styleSuffix] || 'variant-local';
+    const primaryCta = styleSuffix === 'v3' || styleSuffix === 'v6' ? 'Request Enquiry' : styleSuffix === 'v4' ? 'Start Now' : 'Contact Us';
     const ownerWhatsApp = (process.env.OWNER_WHATSAPP_NUMBER || '').replace(/\D/g, '');
     const whatsappHref = ownerWhatsApp
         ? `https://wa.me/${ownerWhatsApp}?text=${encodeURIComponent(`Hi, I want to claim the demo website for ${companyName}. Demo ID: ${demoId}`)}`
         : `${data.baseUrl || 'https://automated-website-generator.vercel.app'}/contact`;
-    const serviceCards = industry.services.map((service) => `<article class="card"><h3>${service}</h3><p>Clear, relevant information that helps visitors decide the next step.</p></article>`).join('');
-    const proofCards = industry.proof.map((item) => `<article class="card"><h3>${item}</h3><p>Credible signals that support trust without inventing unverifiable claims.</p></article>`).join('');
-    const leadBlock = styleSuffix === 'v3'
-        ? `<aside class="lead-form"><label>Name</label><input placeholder="Your name"><label>Phone</label><input placeholder="Phone number"><label>Message</label><textarea rows="4" placeholder="Tell us what you need"></textarea><a class="btn btn-primary" href="#contact">Send enquiry</a></aside>`
-        : `<div class="hero-media"><img src="${industry.image}" alt="${templateBase} hero"></div>`;
+    const serviceCards = industry.services.map((service, index) => `<article class="card animated-card" style="--i:${index}"><span class="card-number">0${index + 1}</span><h3>${service}</h3><p>Clear, relevant information that helps visitors decide the next step.</p></article>`).join('');
+    const proofCards = industry.proof.map((item, index) => `<article class="card proof-card" style="--i:${index}"><h3>${item}</h3><p>Credible signals that support trust without inventing unverifiable claims.</p></article>`).join('');
+    const galleryCards = industry.services.map((service, index) => `<article class="gallery-tile"><img src="${industry.image}" alt="${service}"><span>${service}</span></article>`).join('');
+    const leadForm = `<aside class="lead-form"><label>Name</label><input placeholder="Your name"><label>Phone</label><input placeholder="Phone number"><label>Message</label><textarea rows="4" placeholder="Tell us what you need"></textarea><a class="btn btn-primary" href="#contact">Send enquiry</a></aside>`;
+    const heroVisual = `<div class="hero-media visual-frame"><img src="${industry.image}" alt="${templateBase} hero"><div class="floating-panel"><strong>${industry.eyebrow}</strong><span>${industry.services[0]} • ${industry.proof[0]}</span></div></div>`;
+    const leadBlock = styleSuffix === 'v3' || styleSuffix === 'v6'
+        ? leadForm
+        : heroVisual;
     const mediaBlock = styleSuffix === 'v3'
-        ? `<div class="hero-media"><img src="${industry.image}" alt="${templateBase} hero"></div>`
+        ? heroVisual
+        : '';
+    const supportVisual = styleSuffix === 'v6'
+        ? `<div class="gallery">${galleryCards}</div>`
+        : `<img src="${industry.image}" alt="${templateBase} support">`;
+    const kineticBand = styleSuffix === 'v4' || styleSuffix === 'v6'
+        ? `<section class="kinetic-strip" aria-label="Highlights"><div class="container ticker"><span>${industry.services[0]}</span><span>${industry.services[1]}</span><span>${industry.services[2]}</span><span>${industry.proof[0]}</span><span>${industry.proof[1]}</span></div></section>`
         : '';
 
     return `<!DOCTYPE html>
@@ -289,6 +312,7 @@ function buildSharedTemplate(templateBase, styleSuffix, data, industry, demoId) 
   <link rel="stylesheet" href="styles/system.css">
 </head>
 <body class="${variantClass}">
+  <div class="site-texture" aria-hidden="true"></div>
   <nav class="nav">
     <div class="container nav-inner">
       <a class="brand" href="#">${brandMarkup}</a>
@@ -307,11 +331,13 @@ function buildSharedTemplate(templateBase, styleSuffix, data, industry, demoId) 
           <h1>${industry.headline}</h1>
           <p class="lead">${industry.lead}</p>
           <div class="actions"><a class="btn btn-primary" href="#contact">${primaryCta}</a><a class="btn btn-secondary" href="#services">Explore services</a></div>
+          <div class="mini-proof"><span>${industry.proof[0]}</span><span>${industry.proof[1]}</span></div>
         </div>
         ${leadBlock}
       </div>
     </section>
     ${mediaBlock}
+    ${kineticBand}
     <section id="services" class="section">
       <div class="container">
         <div class="section-head"><h2>What ${companyName} can present clearly</h2><p>${industry.secondary}</p></div>
@@ -320,7 +346,7 @@ function buildSharedTemplate(templateBase, styleSuffix, data, industry, demoId) 
     </section>
     <section id="why-us" class="band">
       <div class="container split">
-        <img src="${industry.image}" alt="${templateBase} support">
+        ${supportVisual}
         <div>
           <div class="section-head"><h2>Built to answer buyer questions early</h2><p>Instead of filler claims, this page structure gives visitors the information they need to trust the business and act.</p></div>
           <div class="cards">${proofCards}</div>

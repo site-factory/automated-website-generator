@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   CheckCircle2, FileUp, Brain,
-  ArrowRight, ArrowLeft, Mail, Sparkles, LayoutTemplate, Palette, Moon, Sun, BookOpen
+  ArrowRight, ArrowLeft, Mail, Sparkles, LayoutTemplate, Palette, Moon, Sun, BookOpen, Zap, PanelsTopLeft
 } from 'lucide-react';
 
 type WizardStep = 1 | 2;
@@ -19,7 +19,7 @@ interface TemplateStyleOption {
   value: string;
   label: string;
   desc: string;
-  icon: 'moon' | 'sun' | 'book';
+  icon: 'moon' | 'sun' | 'book' | 'zap' | 'layout' | 'sparkles';
   preview: string;
 }
 
@@ -100,6 +100,9 @@ export default function Wizard() {
     { id: 'modern',   value: 'v2', label: '🌙 Modern',   desc: 'Dark mode, glassmorphism, gradient accents, bold typography', icon: 'moon',  preview: 'linear-gradient(135deg, #0a0a0f 0%, #111118 50%, #1a1a2e 100%)' },
     { id: 'standard', value: 'v1', label: '☀️ Standard', desc: 'Clean light theme, vibrant colors, professional layout',       icon: 'sun',   preview: 'linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e3f2fd 100%)' },
     { id: 'classic',  value: 'v3', label: '📜 Classic',  desc: 'Elegant serif headings, warm cream tones, timeless design',    icon: 'book',  preview: 'linear-gradient(135deg, #faf8f5 0%, #f5f0ea 50%, #ede8e0 100%)' },
+    { id: 'motion', value: 'v4', label: 'Motion Landing', desc: 'Animated hero, moving highlight strip, and energetic conversion cards', icon: 'zap', preview: 'linear-gradient(135deg, #f8fbff 0%, #dff7ff 45%, #ffffff 100%)' },
+    { id: 'editorial', value: 'v5', label: 'Editorial Texture', desc: 'Magazine-style hierarchy, textured backgrounds, and sharper visual rhythm', icon: 'layout', preview: 'linear-gradient(135deg, #fdfaf3 0%, #e8eef7 55%, #ffffff 100%)' },
+    { id: 'immersive', value: 'v6', label: 'Immersive Pro', desc: 'Layered graphics, glass enquiry panel, gallery-led trust, and stronger depth', icon: 'sparkles', preview: 'linear-gradient(135deg, #ffffff 0%, #e6f7f4 45%, #f7ecff 100%)' },
   ];
 
   const moods = [
@@ -433,6 +436,9 @@ export default function Wizard() {
                             {ts.icon === 'moon' && <Moon style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#8888a0' }} />}
                             {ts.icon === 'sun' && <Sun style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#555' }} />}
                             {ts.icon === 'book' && <BookOpen style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#8a7e6e' }} />}
+                            {ts.icon === 'zap' && <Zap style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#0f766e' }} />}
+                            {ts.icon === 'layout' && <PanelsTopLeft style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#64748b' }} />}
+                            {ts.icon === 'sparkles' && <Sparkles style={{ width: '20px', height: '20px', color: isSelected ? 'var(--primary)' : '#7c3aed' }} />}
                           </div>
                           {/* Label */}
                           <div style={{ padding: '16px' }}>
