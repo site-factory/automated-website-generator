@@ -22,6 +22,16 @@ function cleanupLabel(lead: LeadRecord) {
   return 'safe';
 }
 
+function summarizeBy<T extends string>(items: LeadRecord[], pick: (lead: LeadRecord) => T) {
+  return Object.entries(items.reduce<Record<string, number>>((acc, lead) => {
+    const key = pick(lead) || 'Unknown';
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {}))
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+}
+
 export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
@@ -48,6 +58,9 @@ export default function AdminPage() {
   }, []);
 
   const cleanupCount = useMemo(() => leads.filter(cleanupDue).length, [leads]);
+  const convertedCount = useMemo(() => leads.filter((lead) => lead.status === 'converted').length, [leads]);
+  const leadsByIndustry = useMemo(() => summarizeBy(leads, (lead) => lead.industry), [leads]);
+  const leadsByTemplate = useMemo(() => summarizeBy(leads, (lead) => lead.templateStyle), [leads]);
 
   async function login(event: React.FormEvent) {
     event.preventDefault();
@@ -130,11 +143,30 @@ export default function AdminPage() {
         </div>
         <div className="surface-card admin-metric">
           <span>Protected</span>
-          <strong>{leads.filter((lead) => lead.status === 'converted').length}</strong>
+          <strong>{convertedCount}</strong>
+        </div>
+        <div className="surface-card admin-metric">
+          <span>Conversion rate</span>
+          <strong>{leads.length ? Math.round((convertedCount / leads.length) * 100) : 0}%</strong>
         </div>
         <div className="surface-card admin-metric">
           <span>Cleanup due</span>
           <strong>{cleanupCount}</strong>
+        </div>
+      </section>
+
+      <section className="admin-insights">
+        <div className="surface-card admin-insight-card">
+          <h2>Leads by industry</h2>
+          {leadsByIndustry.length ? leadsByIndustry.map(([label, count]) => (
+            <div className="admin-insight-row" key={label}><span>{label}</span><strong>{count}</strong></div>
+          )) : <p className="muted">No leads yet.</p>}
+        </div>
+        <div className="surface-card admin-insight-card">
+          <h2>Leads by template style</h2>
+          {leadsByTemplate.length ? leadsByTemplate.map(([label, count]) => (
+            <div className="admin-insight-row" key={label}><span>{label}</span><strong>{count}</strong></div>
+          )) : <p className="muted">No leads yet.</p>}
         </div>
       </section>
 

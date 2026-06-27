@@ -36,6 +36,12 @@ interface FormData {
   email: string;
 }
 
+interface GenerationResult {
+  demoUrl: string;
+  repoUrl: string | null;
+  leadId: string | null;
+}
+
 export default function Wizard() {
   const [step, setStep] = useState<WizardStep>(1);
   const [formData, setFormData] = useState<FormData>({
@@ -54,6 +60,8 @@ export default function Wizard() {
   const [generating, setGenerating] = useState(false);
   const [progressLogs, setProgressLogs] = useState<string[]>([]);
   const [finalUrl, setFinalUrl] = useState<string | null>(null);
+  const [generationResult, setGenerationResult] = useState<GenerationResult | null>(null);
+  const [copied, setCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const steps = [
@@ -110,6 +118,20 @@ export default function Wizard() {
     { id: 'authority', label: 'The Authority', desc: 'Trust-focused, structured layouts, data-driven' },
     { id: 'friendly', label: 'The Friendly Pro', desc: 'Warm, approachable, heavy on social proof' },
   ];
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const industry = params.get('industry');
+    const templateStyle = params.get('templateStyle');
+
+    if (industry || templateStyle) {
+      setFormData((prev) => ({
+        ...prev,
+        ...(industry ? { industry } : {}),
+        ...(templateStyle ? { templateStyle } : {}),
+      }));
+    }
+  }, []);
 
   // Logo color extraction via Canvas API
   const extractColor = (file: File) => {
@@ -224,8 +246,13 @@ export default function Wizard() {
             }
           }
 
-          setProgressLogs(prev => [...prev, `[DONE] Your demo is fully deployed and live!`]);
-          setFinalUrl(data.demoUrl);
+        setProgressLogs(prev => [...prev, `[DONE] Your demo is fully deployed and live!`]);
+        setFinalUrl(data.demoUrl);
+        setGenerationResult({
+          demoUrl: data.demoUrl,
+          repoUrl: data.repoUrl || null,
+          leadId: data.leadId || null,
+        });
 
         }, 1500);
       } else {
@@ -251,6 +278,28 @@ export default function Wizard() {
 
   const handleBack = () => {
     if (step > 1) setStep((step - 1) as WizardStep);
+  };
+
+  const copyDemoLink = async () => {
+    if (!generationResult?.demoUrl) return;
+    await navigator.clipboard.writeText(generationResult.demoUrl);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  };
+
+  const shareOnWhatsApp = () => {
+    if (!generationResult?.demoUrl) return;
+    const message = `Here is the AI SiteSpark demo for ${formData.businessName}: ${generationResult.demoUrl}${generationResult.leadId ? ` Lead ID: ${generationResult.leadId}` : ''}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const resetWizard = () => {
+    setGenerating(false);
+    setProgressLogs([]);
+    setFinalUrl(null);
+    setGenerationResult(null);
+    setCopied(false);
+    setStep(1);
   };
 
   if (generating) {
@@ -312,12 +361,28 @@ export default function Wizard() {
           </div>
 
           {/* Final Live Link Popup */}
-          {finalUrl && (
-            <div style={{ marginTop: '40px', animation: 'up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards', textAlign: 'center' }}>
-              <a href={finalUrl} target="_blank" rel="noopener noreferrer" className="btn-cyan" style={{ display: 'inline-flex', padding: '16px 32px', fontSize: '1.2rem', textDecoration: 'none', borderRadius: '8px', boxShadow: '0 0 20px rgba(0,163,141,0.3)' }}>
-                <Sparkles style={{ width: "20px", height: "20px", marginRight: "10px" }} /> Open Your Custom Website
-              </a>
-              <p style={{ color: "#475569", marginTop: "16px", fontSize: "0.9rem" }}>Your site has been successfully deployed to the edge.</p>
+          {finalUrl && generationResult && (
+            <div className="generation-success-card">
+              <span className="success-pill">Live demo ready</span>
+              <h3>{formData.businessName} is online.</h3>
+              <p>Your generated website preview is ready to open, copy, or share with your team.</p>
+              <div className="success-actions">
+                <a href={generationResult.demoUrl} target="_blank" rel="noopener noreferrer" className="btn-cyan">
+                  <Sparkles style={{ width: "18px", height: "18px", marginRight: "8px" }} /> Open Website
+                </a>
+                <button type="button" className="success-secondary-btn" onClick={copyDemoLink}>
+                  {copied ? 'Copied' : 'Copy Demo Link'}
+                </button>
+                <button type="button" className="success-secondary-btn" onClick={shareOnWhatsApp}>
+                  Share on WhatsApp
+                </button>
+                <button type="button" className="success-secondary-btn" onClick={resetWizard}>
+                  Generate Another
+                </button>
+              </div>
+              <p className="success-meta">
+                {generationResult.leadId ? `Lead ID: ${generationResult.leadId}` : 'Lead saved'}{generationResult.repoUrl ? ' • Repository created' : ''}
+              </p>
             </div>
           )}
         </div>

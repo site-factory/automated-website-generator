@@ -36,6 +36,29 @@ export default function Home() {
       <section className="w-full max-w-6xl px-3 sm:px-6 z-10">
         <Wizard />
       </section>
+
+      <section className="home-process-section">
+        <div className="home-section-head">
+          <span className="marketing-eyebrow">How it works</span>
+          <h2>From business details to a live demo without a long briefing process.</h2>
+          <p>AI SiteSpark is built for quick proof: generate a focused website preview, share it, and claim it when it is ready to become your real site.</p>
+        </div>
+        <div className="home-process-grid">
+          {[
+            ['1', 'Enter the business basics', 'Choose an industry, style, palette, and content tone that match the business.'],
+            ['2', 'Generate the demo', 'The system builds a static website preview with conversion sections and brand styling.'],
+            ['3', 'Open the live link', 'The generated demo is published as a shareable website preview.'],
+            ['4', 'Claim through WhatsApp', 'The demo includes a clear owner contact path for launch conversations.'],
+            ['5', 'Unclaimed demos stay tidy', 'Old unclaimed previews can be cleaned up while converted leads are protected.'],
+          ].map(([step, title, body]) => (
+            <article className="process-card surface-card" key={step}>
+              <span>{step}</span>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

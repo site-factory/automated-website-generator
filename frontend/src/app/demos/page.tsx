@@ -1,42 +1,76 @@
 "use client";
 
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ExternalLink } from 'lucide-react';
+import { ArrowRight, Layers3 } from 'lucide-react';
 import MarketingShell from '@/components/MarketingShell';
+import { demoIndustries, templateStyles } from '@/lib/traction-content';
 
-const demos = [
-  ['Fashion & Apparel', 'Trendy boutique store with product showcase.'],
-  ['Medical & Clinics', 'Professional clinic with appointment CTA.'],
-  ['Restaurant & Dining', 'Restaurant site with menu and reservations.'],
-  ['Real Estate', 'Property listings for residential and commercial.'],
-  ['Education & Academia', 'Programs, admissions, and trust-building content.'],
-  ['Digital Agency', 'Service portfolio with strong conversion sections.'],
-  ['Interior Design', 'Portfolio-driven studio presentation.'],
-  ['Dairy Industry', 'Product-led local business showcase.'],
-  ['Temple & Devotional', 'Timings, seva, and devotional content.'],
-  ['Social Service & NGO', 'Impact messaging and donation flow.'],
-  ['E-Commerce Store', 'Catalog-led shopping experience.'],
-  ['Construction & Materials', 'Supplier site with quote request flow.'],
-] as const;
+const previewCards = demoIndustries.flatMap((industry, industryIndex) =>
+  templateStyles.map((style, styleIndex) => ({
+    id: `${industry.slug}-${style.value}`,
+    ...industry,
+    style,
+    pattern: `linear-gradient(135deg, ${industry.accent}22, #ffffff 45%, ${styleIndex % 2 ? '#ecfeff' : '#f8fafc'}), radial-gradient(circle at ${22 + industryIndex * 9}% ${18 + styleIndex * 8}%, ${industry.accent}55, transparent 24%)`,
+  })),
+);
 
 export default function DemosPage() {
+  const [industryFilter, setIndustryFilter] = useState('all');
+  const [styleFilter, setStyleFilter] = useState('all');
+
+  const filteredCards = useMemo(() => previewCards.filter((card) => (
+    (industryFilter === 'all' || card.slug === industryFilter)
+    && (styleFilter === 'all' || card.style.value === styleFilter)
+  )), [industryFilter, styleFilter]);
+
   return (
     <MarketingShell active="demos">
       <section className="marketing-hero">
-        <h1>Browse Demo Templates</h1>
-        <p>Explore the current industry coverage and generate a personalised version in under 60 seconds.</p>
+        <span className="marketing-eyebrow">Template proof library</span>
+        <h1>Browse demo directions before generating your own.</h1>
+        <p>Filter by business type and visual strategy, then start with the closest direction for your own website demo.</p>
       </section>
-      <div className="marketing-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
-        {demos.map(([industry, desc]) => (
-          <article key={industry} className="surface-card" style={{ padding: 24 }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: 10 }}>{industry}</h3>
-            <p className="muted" style={{ minHeight: 48, lineHeight: 1.6, marginBottom: 20 }}>{desc}</p>
-            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
-              Generate Your Own <ExternalLink style={{ width: 15, height: 15 }} />
-            </Link>
+
+      <section className="demo-filter-bar" aria-label="Demo filters">
+        <select value={industryFilter} onChange={(event) => setIndustryFilter(event.target.value)} aria-label="Filter by industry">
+          <option value="all">All industries</option>
+          {demoIndustries.map((industry) => (
+            <option key={industry.slug} value={industry.slug}>{industry.label}</option>
+          ))}
+        </select>
+        <select value={styleFilter} onChange={(event) => setStyleFilter(event.target.value)} aria-label="Filter by template style">
+          <option value="all">All styles</option>
+          {templateStyles.map((style) => (
+            <option key={style.value} value={style.value}>{style.label}</option>
+          ))}
+        </select>
+        <span>{filteredCards.length} preview directions</span>
+      </section>
+
+      <section className="demo-gallery-grid">
+        {filteredCards.map((card) => (
+          <article className="demo-preview-card surface-card" key={card.id}>
+            <div className="demo-preview-visual" style={{ background: card.pattern }}>
+              <div className="demo-browser-bar"><span /><span /><span /></div>
+              <div className="demo-preview-layout">
+                <div />
+                <div />
+                <div />
+              </div>
+            </div>
+            <div className="demo-preview-body">
+              <span className="demo-style-pill"><Layers3 size={14} /> {card.style.label}</span>
+              <h3>{card.label}</h3>
+              <p>{card.useCase}</p>
+              <p className="muted">{card.style.tone}</p>
+              <Link href={`/?industry=${encodeURIComponent(card.industry)}&templateStyle=${card.style.value}`} className="demo-card-link">
+                Generate Similar Website <ArrowRight size={15} />
+              </Link>
+            </div>
           </article>
         ))}
-      </div>
+      </section>
     </MarketingShell>
   );
 }
