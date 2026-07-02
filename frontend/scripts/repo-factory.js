@@ -36,6 +36,7 @@ async function generateDemo(data) {
     else if (industry === 'dairy' || industry === 'dairy industry' || industry === 'milk') templateBase = 'dairy';
     else if (industry === 'real estate' || industry === 'realestate' || industry === 'property') templateBase = 'realestate';
     else if (industry === 'restaurant' || industry === 'food' || industry === 'cafe' || industry === 'dining') templateBase = 'restaurant';
+    else if (industry === 'beauty' || industry === 'beauty parlor' || industry === 'beauty parlour' || industry === 'salon' || industry === 'hair salon' || industry === 'hair salons' || industry === 'beauty salon') templateBase = 'beauty';
     else if (industry === 'social service' || industry === 'ngo' || industry === 'charity' || industry === 'social') templateBase = 'socialservice';
     else if (industry === 'temple' || industry === 'devotional' || industry === 'religious' || industry === 'spiritual') templateBase = 'temple';
 

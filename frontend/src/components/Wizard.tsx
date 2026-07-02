@@ -84,6 +84,7 @@ export default function Wizard() {
     { id: 'Real Estate',       label: 'Real Estate',              emoji: '🏘️' },
     { id: 'Restaurant',     label: 'Restaurant & Dining',      emoji: '🍽️' },
     { id: 'Social Service', label: 'Social Service & NGO',      emoji: '🤝' },
+    { id: 'Beauty',         label: 'Beauty Parlor & Hair Salon', emoji: 'Salon' },
     { id: 'Temple',         label: 'Temple & Devotional',       emoji: '🛕' },
   ];
 

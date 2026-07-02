@@ -50,6 +50,13 @@ const demoIndustries = [
     useCase: 'Services, selected work, process, and consultation-led conversion.',
     accent: '#0891b2',
   },
+  {
+    slug: 'beauty',
+    label: 'Beauty Parlor & Hair Salon',
+    industry: 'Beauty',
+    useCase: 'Hair services, beauty treatments, bridal packages, gallery proof, and appointment intent.',
+    accent: '#db2777',
+  },
 ] as const;
 
 const industryPages = {

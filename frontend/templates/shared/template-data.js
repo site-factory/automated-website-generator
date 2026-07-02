@@ -98,6 +98,15 @@ const industries = {
     proof: ['Visual curation', 'Editorial tone', 'Easy browsing'],
     secondary: 'Fashion brands sell through mood, fit, and presentation quality.',
   },
+  beauty: {
+    eyebrow: 'Beauty salon',
+    headline: 'Make every service feel easy to book and worth visiting.',
+    lead: 'A polished salon website with service menus, bridal and hair care highlights, gallery-led trust, and direct enquiry paths.',
+    image: 'assets/beauty/hero.png',
+    services: ['Hair styling', 'Beauty treatments', 'Bridal packages'],
+    proof: ['Service menu clarity', 'Appointment-friendly flow', 'Visual style confidence'],
+    secondary: 'Beauty businesses convert better when visitors can see the experience, compare services, and book quickly.',
+  },
   portfolio: {
     eyebrow: 'Portfolio',
     headline: 'Make the work speak before the bio does.',
