@@ -118,9 +118,23 @@ export async function listLeads(): Promise<LeadRecord[]> {
   return leads.map(normalizeLead);
 }
 
+export async function getLead(id: string): Promise<LeadRecord | null> {
+  const leads = await supabaseRequest<LeadRow[]>(
+    `leads?select=*&id=eq.${id}&limit=1`,
+    { method: 'GET' },
+  );
+
+  return leads[0] ? normalizeLead(leads[0]) : null;
+}
+
 export async function updateLeadAdmin(
   id: string,
-  data: { status?: LeadStatus; notes?: string | null },
+  data: {
+    status?: LeadStatus;
+    notes?: string | null;
+    cleanupStatus?: LeadRecord['cleanupStatus'];
+    deletedAt?: string | null;
+  },
 ): Promise<LeadRecord> {
   const [lead] = await supabaseRequest<LeadRow[]>(`leads?id=eq.${id}`, {
     method: 'PATCH',
@@ -128,6 +142,8 @@ export async function updateLeadAdmin(
     body: JSON.stringify({
       ...(data.status ? { status: data.status } : {}),
       ...(data.notes !== undefined ? { notes: data.notes } : {}),
+      ...(data.cleanupStatus ? { cleanup_status: data.cleanupStatus } : {}),
+      ...(data.deletedAt !== undefined ? { deleted_at: data.deletedAt } : {}),
       updated_at: new Date().toISOString(),
     }),
   });

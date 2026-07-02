@@ -39,6 +39,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/admin/leads')
@@ -103,6 +104,29 @@ export default function AdminPage() {
     setSavingId(null);
   }
 
+  async function deleteDemoRepo(lead: LeadRecord) {
+    if (!lead.githubRepoName) return;
+
+    const confirmed = window.confirm(`Delete GitHub demo repo "${lead.githubRepoName}"? This cannot be undone.`);
+    if (!confirmed) return;
+
+    setDeletingId(lead.id);
+    setError('');
+    const res = await fetch(`/api/admin/leads/${lead.id}/delete-repo`, { method: 'POST' });
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || 'Failed to delete repo');
+      setDeletingId(null);
+      return;
+    }
+
+    if (data.lead) {
+      setLeads((current) => current.map((item) => item.id === lead.id ? data.lead : item));
+    }
+    setDeletingId(null);
+  }
+
   if (loading) {
     return <main className="admin-shell"><p>Loading admin console...</p></main>;
   }
@@ -132,6 +156,7 @@ export default function AdminPage() {
         <div>
           <h1>Lead Management</h1>
           <p className="muted">Mark converted leads to protect their repositories from janitor cleanup.</p>
+          {error ? <p className="admin-error">{error}</p> : null}
         </div>
         <button onClick={logout} className="admin-link-button"><LogOut size={16} /> Logout</button>
       </header>
@@ -184,6 +209,7 @@ export default function AdminPage() {
               <span>Links</span>
               <span>Notes</span>
               <span>Cleanup</span>
+              <span>Actions</span>
             </div>
             {leads.map((lead) => (
               <div className="admin-row" key={lead.id}>
@@ -213,6 +239,22 @@ export default function AdminPage() {
                 />
                 <span className={cleanupDue(lead) ? 'admin-risk due' : 'admin-risk safe'}>
                   {cleanupLabel(lead)}
+                </span>
+                <span>
+                  <button
+                    type="button"
+                    className="admin-delete-button"
+                    disabled={
+                      deletingId === lead.id
+                      || lead.status === 'converted'
+                      || lead.cleanupStatus === 'deleted'
+                      || !lead.githubRepoName
+                    }
+                    onClick={() => deleteDemoRepo(lead)}
+                    title={lead.status === 'converted' ? 'Converted leads are protected' : 'Delete demo repo'}
+                  >
+                    <Trash2 size={14} /> {deletingId === lead.id ? 'Deleting...' : 'Delete repo'}
+                  </button>
                 </span>
               </div>
             ))}
