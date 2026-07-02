@@ -57,6 +57,7 @@ export async function POST(request: Request) {
       message: 'Demo generated successfully',
       demoUrl: finalDemoUrl,
       repoUrl: result.githubUrl || null,
+      repoName: result.repoName || null,
       leadId: lead.id,
     });
   } catch (error) {

@@ -39,6 +39,7 @@ interface FormData {
 interface GenerationResult {
   demoUrl: string;
   repoUrl: string | null;
+  repoName: string | null;
   leadId: string | null;
 }
 
@@ -236,24 +237,36 @@ export default function Wizard() {
               const checkRes = await fetch('/api/check', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: data.demoUrl })
+                body: JSON.stringify({
+                  url: data.demoUrl,
+                  repoName: data.repoName || null,
+                  retryFailedBuild: attempts === 6 || attempts === 12 || attempts === 18,
+                })
               });
               const checkData = await checkRes.json();
               if (checkData.live) {
                 isLive = true;
+              } else if (checkData.rebuild?.requested) {
+                setProgressLogs(prev => [...prev, '[...]  GitHub Pages reported a failed build, retry queued...']);
               }
             } catch (e) {
               // Ignore errors and keep polling
             }
           }
 
-        setProgressLogs(prev => [...prev, `[DONE] Your demo is fully deployed and live!`]);
-        setFinalUrl(data.demoUrl);
-        setGenerationResult({
-          demoUrl: data.demoUrl,
-          repoUrl: data.repoUrl || null,
-          leadId: data.leadId || null,
-        });
+          if (!isLive) {
+            setProgressLogs(prev => [...prev, '[ERROR] GitHub Pages did not become live within 2 minutes. The repo was created, but deployment may need a retry.']);
+            return;
+          }
+
+          setProgressLogs(prev => [...prev, `[DONE] Your demo is fully deployed and live!`]);
+          setFinalUrl(data.demoUrl);
+          setGenerationResult({
+            demoUrl: data.demoUrl,
+            repoUrl: data.repoUrl || null,
+            repoName: data.repoName || null,
+            leadId: data.leadId || null,
+          });
 
         }, 1500);
       } else {
