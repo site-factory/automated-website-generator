@@ -26,6 +26,9 @@ async function generateDemo(data) {
     const industry = (data.industry || '').toLowerCase();
     if (industry === 'medical') templateBase = 'medical';
     else if (industry === 'fashion') templateBase = 'fashion';
+    else if (industry === 'indian ethnic wear' || industry === 'ethnic wear' || industry === 'ethnic dresses' || industry === 'indian ethnic dresses' || industry === 'saree' || industry === 'sarees' || industry === 'lehenga' || industry === 'lehengas' || industry === 'kurti' || industry === 'kurtis' || industry === 'salwar' || industry === 'salwar suit') templateBase = 'ethnicwear';
+    else if (industry === 'women hosiery' || industry === "women's hosiery" || industry === 'womens hosiery' || industry === 'hosiery' || industry === 'leggings' || industry === 'shapewear' || industry === 'innerwear') templateBase = 'womenshosiery';
+    else if (industry === 'kids wear' || industry === 'kidswear' || industry === 'kids clothing' || industry === 'children clothing' || industry === "children's clothing" || industry === 'child wear' || industry === 'baby clothes') templateBase = 'kidswear';
     else if (industry === 'portfolio' || industry === 'tech') templateBase = 'portfolio';
     else if (industry === 'education' || industry === 'school' || industry === 'college' || industry === 'university' || industry === 'academy') templateBase = 'education';
     else if (industry === 'construction' || industry === 'building materials' || industry === 'raw materials') templateBase = 'construction';

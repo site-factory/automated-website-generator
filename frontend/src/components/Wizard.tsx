@@ -99,6 +99,9 @@ export default function Wizard() {
   const industries = [
     { id: 'Medical',           label: 'Medical & Clinics',        emoji: '🏥' },
     { id: 'Fashion',           label: 'Fashion & Apparel',        emoji: '👗' },
+    { id: 'Indian Ethnic Wear', label: 'Indian Ethnic Dresses',    emoji: 'Ethnic' },
+    { id: 'Women Hosiery',      label: "Women's Hosiery",          emoji: 'Hosiery' },
+    { id: 'Kids Wear',          label: 'Kids Wear',                emoji: 'Kids' },
     { id: 'Tech',              label: 'Tech & Portfolio',         emoji: '💻' },
     { id: 'Food',              label: 'Cafe & Food',              emoji: '☕' },
     { id: 'Education',         label: 'Education & Academia',     emoji: '🎓' },

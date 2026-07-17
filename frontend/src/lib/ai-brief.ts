@@ -21,6 +21,9 @@ type ProviderResult = {
 const supportedIndustries = new Set([
   'Medical',
   'Fashion',
+  'Indian Ethnic Wear',
+  'Women Hosiery',
+  'Kids Wear',
   'Tech',
   'Food',
   'Education',
@@ -67,7 +70,7 @@ ${userPrompt}
 Return only JSON with this exact shape:
 {
   "businessName": "string",
-  "industry": "Medical|Fashion|Tech|Food|Education|Construction|Interior|Hospital|Agency|Ecommerce|Dairy|Real Estate|Restaurant|Social Service|Beauty|Temple|Professional",
+  "industry": "Medical|Fashion|Indian Ethnic Wear|Women Hosiery|Kids Wear|Tech|Food|Education|Construction|Interior|Hospital|Agency|Ecommerce|Dairy|Real Estate|Restaurant|Social Service|Beauty|Temple|Professional",
   "templateStyle": "v1|v2|v3|v4|v5|v6",
   "mood": "visionary|authority|friendly",
   "paletteName": "Ocean Professional|Forest & Earth|Sunset Warm|Royal Purple|Corporate Steel|Rose & Gold|Midnight Dark|Tropical Vivid|Sage & Mint|Crimson Bold|Golden Hour|Arctic Cool",
@@ -81,7 +84,10 @@ Return only JSON with this exact shape:
 }
 
 Rules:
-- Pick the closest supported industry. Use Beauty for salons, parlors, hair, makeup, spa, grooming, and bridal beauty.
+- Pick the closest supported industry. Use Indian Ethnic Wear for sarees, lehengas, kurtis, salwar suits, and ethnic dresses.
+- Use Women Hosiery for hosiery, leggings, shapewear, camisoles, socks, innerwear, and women's daily essentials.
+- Use Kids Wear for children's clothing, kidswear, baby clothes, party outfits, and age-wise kids collections.
+- Use Beauty for salons, parlors, hair, makeup, spa, grooming, and bridal beauty.
 - Pick Restaurant for cafes and dining.
 - Pick Professional if nothing fits.
 - Pick v6 for visually premium businesses, v3 for enquiry-heavy businesses, v4 for energetic landing pages, v1 for simple local businesses.
@@ -116,6 +122,34 @@ function normalizeIndustry(value: unknown) {
     healthcare: 'Hospital',
     fashion: 'Fashion',
     boutique: 'Fashion',
+    'indian ethnic wear': 'Indian Ethnic Wear',
+    'ethnic wear': 'Indian Ethnic Wear',
+    'ethnic dresses': 'Indian Ethnic Wear',
+    'indian ethnic dresses': 'Indian Ethnic Wear',
+    saree: 'Indian Ethnic Wear',
+    sarees: 'Indian Ethnic Wear',
+    lehenga: 'Indian Ethnic Wear',
+    lehengas: 'Indian Ethnic Wear',
+    kurti: 'Indian Ethnic Wear',
+    kurtis: 'Indian Ethnic Wear',
+    salwar: 'Indian Ethnic Wear',
+    'salwar suit': 'Indian Ethnic Wear',
+    'women hosiery': 'Women Hosiery',
+    "women's hosiery": 'Women Hosiery',
+    'womens hosiery': 'Women Hosiery',
+    hosiery: 'Women Hosiery',
+    leggings: 'Women Hosiery',
+    shapewear: 'Women Hosiery',
+    innerwear: 'Women Hosiery',
+    camisole: 'Women Hosiery',
+    socks: 'Women Hosiery',
+    'kids wear': 'Kids Wear',
+    kidswear: 'Kids Wear',
+    'kids clothing': 'Kids Wear',
+    'children clothing': 'Kids Wear',
+    "children's clothing": 'Kids Wear',
+    'child wear': 'Kids Wear',
+    'baby clothes': 'Kids Wear',
     tech: 'Tech',
     portfolio: 'Tech',
     food: 'Food',

@@ -57,6 +57,27 @@ const demoIndustries = [
     useCase: 'Hair services, beauty treatments, bridal packages, gallery proof, and appointment intent.',
     accent: '#db2777',
   },
+  {
+    slug: 'ethnicwear',
+    label: 'Indian Ethnic Dresses',
+    industry: 'Indian Ethnic Wear',
+    useCase: 'Saree, lehenga, kurti, and occasion-wear browsing with WhatsApp consultation intent.',
+    accent: '#b45309',
+  },
+  {
+    slug: 'womens-hosiery',
+    label: "Women's Hosiery",
+    industry: 'Women Hosiery',
+    useCase: 'Leggings, shapewear, camisoles, and daily essentials presented with privacy-conscious clarity.',
+    accent: '#be185d',
+  },
+  {
+    slug: 'kidswear',
+    label: 'Kids Wear',
+    industry: 'Kids Wear',
+    useCase: 'Age-wise collections, party wear, everyday outfits, and parent-friendly enquiry paths.',
+    accent: '#0ea5e9',
+  },
 ] as const;
 
 const industryPages = {
