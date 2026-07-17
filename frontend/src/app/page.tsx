@@ -18,7 +18,6 @@ export default function Home() {
         </div>
         <div className="hidden md:flex gap-10 text-[0.95rem] font-medium" style={{ color: '#64748B' }}>
           <Link href="/features" className="hover:text-[#00A38D] transition-colors">Features</Link>
-          <Link href="/pricing" className="hover:text-[#00A38D] transition-colors">Pricing</Link>
           <Link href="/demos" className="hover:text-[#00A38D] transition-colors">Demos</Link>
           <Link href="/contact" className="hover:text-[#00A38D] transition-colors">Contact</Link>
         </div>

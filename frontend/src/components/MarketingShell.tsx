@@ -2,13 +2,12 @@ import Link from 'next/link';
 import { Brain } from 'lucide-react';
 
 interface MarketingShellProps {
-  active?: 'features' | 'pricing' | 'demos' | 'contact';
+  active?: 'features' | 'demos' | 'contact';
   children: React.ReactNode;
 }
 
 const navItems = [
   { key: 'features', label: 'Features', href: '/features' },
-  { key: 'pricing', label: 'Pricing', href: '/pricing' },
   { key: 'demos', label: 'Demos', href: '/demos' },
   { key: 'contact', label: 'Contact', href: '/contact' },
 ] as const;
