@@ -44,7 +44,7 @@ function ClaimContent() {
           <h3 style={{ marginBottom: 6 }}>Need help choosing?</h3>
           <p className="muted">Reach us directly and we will help finalise the right package.</p>
         </div>
-        <a href="mailto:hello@aisitespark.com" className="btn-cyan" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+        <a href="mailto:support@teadustech.com" className="btn-cyan" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
           <Mail style={{ width: 16, height: 16 }} /> Email Us
         </a>
       </div>

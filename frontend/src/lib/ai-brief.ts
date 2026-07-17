@@ -234,7 +234,7 @@ async function tryOpenRouter(prompt: string): Promise<ProviderResult> {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-sitespark.local',
-      'X-Title': 'AI SiteSpark',
+      'X-Title': 'Teadustech SiteSpark',
     },
     body: JSON.stringify({
       model: process.env.OPENROUTER_MODEL || 'openrouter/free',

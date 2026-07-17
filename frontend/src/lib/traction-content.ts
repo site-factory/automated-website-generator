@@ -85,7 +85,7 @@ const industryPages = {
     industry: 'Restaurant',
     eyebrow: 'Restaurant website demos',
     headline: 'Turn hungry visitors into bookings before they call.',
-    intro: 'AI SiteSpark creates restaurant demos with menu focus, strong food presentation, practical location details, and reservation-ready calls to action.',
+    intro: 'Teadustech SiteSpark creates restaurant demos with menu focus, strong food presentation, practical location details, and reservation-ready calls to action.',
     pains: ['Food photos are scattered across social media', 'Menus and timings are hard to find', 'New guests do not know what makes the place worth visiting'],
     benefits: ['Menu-led website structure', 'Reservation and WhatsApp-ready CTAs', 'Gallery sections that sell ambience and signature dishes'],
   },

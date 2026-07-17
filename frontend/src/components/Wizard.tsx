@@ -269,7 +269,7 @@ export default function Wizard() {
     setGenerating(true);
     setProgressLogs([]);
     const baseLogs = [
-      '[SYS] Initializing AuraGen Engine v2.0...',
+      '[SYS] Initializing Teadustech SiteSpark engine...',
       `[OK]  Industry detected: ${formData.industry}`,
       `[OK]  Business name: "${formData.businessName}"`,
       '[...]  Sending payload to Repo Factory...',
@@ -388,7 +388,7 @@ export default function Wizard() {
 
   const shareOnWhatsApp = () => {
     if (!generationResult?.demoUrl) return;
-    const message = `Here is the AI SiteSpark demo for ${formData.businessName}: ${generationResult.demoUrl}${generationResult.leadId ? ` Lead ID: ${generationResult.leadId}` : ''}`;
+    const message = `Here is the Teadustech SiteSpark demo for ${formData.businessName}: ${generationResult.demoUrl}${generationResult.leadId ? ` Lead ID: ${generationResult.leadId}` : ''}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
   };
 

@@ -21,7 +21,7 @@ export default function MarketingShell({ active, children }: MarketingShellProps
       <nav className="marketing-nav">
         <Link href="/" className="marketing-brand">
           <Brain className="marketing-brand-icon" />
-          <span>AI SiteSpark</span>
+          <span>Teadustech SiteSpark</span>
         </Link>
         <div className="marketing-links">
           {navItems.map((item) => (

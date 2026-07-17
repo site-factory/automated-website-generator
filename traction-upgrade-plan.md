@@ -1,7 +1,7 @@
 # Traction Upgrade Tracker
 
 ## Goal
-Increase trust, sharing, SEO reach, and lead conversion for AI SiteSpark.
+Increase trust, sharing, SEO reach, and lead conversion for Teadustech SiteSpark.
 
 ## Implementation Status
 - Status: In progress

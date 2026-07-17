@@ -13,8 +13,8 @@ export default function Home() {
       {/* Navbar */}
       <nav className="w-full max-w-7xl px-4 sm:px-8 py-6 sm:py-8 flex justify-between items-center z-50">
         <div className="flex items-center gap-3">
-          <img src="/brandmark.png" alt="AI SiteSpark" className="w-9 h-9 rounded-lg" />
-          <span className="text-[1.35rem] font-bold tracking-wide" style={{ color: '#0F172A' }}>AI SiteSpark</span>
+          <img src="/brandmark.png" alt="Teadustech SiteSpark" className="w-9 h-9 rounded-lg" />
+          <span className="text-[1.35rem] font-bold tracking-wide" style={{ color: '#0F172A' }}>Teadustech SiteSpark</span>
         </div>
         <div className="hidden md:flex gap-10 text-[0.95rem] font-medium" style={{ color: '#64748B' }}>
           <Link href="/features" className="hover:text-[#00A38D] transition-colors">Features</Link>
@@ -41,7 +41,7 @@ export default function Home() {
         <div className="home-section-head">
           <span className="marketing-eyebrow">How it works</span>
           <h2>From business details to a live demo without a long briefing process.</h2>
-          <p>AI SiteSpark is built for quick proof: generate a focused website preview, share it, and claim it when it is ready to become your real site.</p>
+          <p>Teadustech SiteSpark is built for quick proof: generate a focused website preview, share it, and claim it when it is ready to become your real site.</p>
         </div>
         <div className="home-process-grid">
           {[

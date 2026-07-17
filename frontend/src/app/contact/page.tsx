@@ -1,33 +1,23 @@
-"use client";
-
-import { useState } from 'react';
-import { CheckCircle2, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import MarketingShell from '@/components/MarketingShell';
 
 export default function ContactPage() {
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', service: '' });
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '14px 16px',
-    border: '1px solid var(--border)',
-    borderRadius: 12,
-    fontSize: '0.95rem',
-    fontFamily: 'inherit',
-  };
+  const email = 'support@teadustech.com';
+  const phone = '9703527689';
+  const whatsappUrl = `https://wa.me/91${phone}?text=${encodeURIComponent('Hi Teadustech, I want to discuss a website demo.')}`;
 
   return (
     <MarketingShell active="contact">
       <section className="marketing-hero">
         <h1>Contact</h1>
-        <p>Use this page for direct enquiries while the demo funnel handles automated lead capture.</p>
+        <p>Reach Teadustech for website demo support, launch discussions, and product enquiries.</p>
       </section>
       <div className="marketing-grid" style={{ gridTemplateColumns: 'minmax(260px, 0.8fr) minmax(320px, 1.2fr)', alignItems: 'start' }}>
         <div style={{ display: 'grid', gap: 18 }}>
           {[
-            [Mail, 'Email', 'hello@aisitespark.com'],
-            [Phone, 'Phone / WhatsApp', '+91 99999 99999'],
+            [Mail, 'Email', email],
+            [Phone, 'Phone', phone],
+            [MessageCircle, 'WhatsApp', `+91 ${phone}`],
             [MapPin, 'Location', 'Hyderabad, Telangana, India'],
           ].map(([Icon, label, value]) => (
             <div key={String(label)} className="surface-card" style={{ padding: 20, display: 'flex', gap: 14, alignItems: 'center' }}>
@@ -39,34 +29,16 @@ export default function ContactPage() {
             </div>
           ))}
         </div>
-        <div className="surface-card" style={{ padding: 28 }}>
-          {sent ? (
-            <div style={{ textAlign: 'center', padding: '40px 0' }}>
-              <CheckCircle2 style={{ width: 52, height: 52, color: 'var(--primary)', margin: '0 auto 16px' }} />
-              <h3 style={{ marginBottom: 8 }}>Message Sent</h3>
-              <p className="muted">We will get back within 24 hours.</p>
-            </div>
-          ) : (
-            <form onSubmit={(event) => { event.preventDefault(); setSent(true); }} style={{ display: 'grid', gap: 16 }}>
-              <input required placeholder="Your name" style={inputStyle} value={form.name} onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))} />
-              <div style={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
-                <input required type="email" placeholder="Email" style={inputStyle} value={form.email} onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))} />
-                <input placeholder="Phone" style={inputStyle} value={form.phone} onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))} />
-              </div>
-              <select required style={inputStyle} value={form.service} onChange={(event) => setForm((prev) => ({ ...prev, service: event.target.value }))}>
-                <option value="">Select a service</option>
-                <option>Landing Page</option>
-                <option>Standard Website</option>
-                <option>Advanced Website</option>
-                <option>E-Commerce Store</option>
-                <option>Custom / Enterprise</option>
-              </select>
-              <textarea required rows={5} placeholder="Tell us about your business and what you need" style={{ ...inputStyle, resize: 'vertical' }} value={form.message} onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))} />
-              <button type="submit" className="btn-cyan" style={{ border: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                <Send style={{ width: 16, height: 16 }} /> Send Message
-              </button>
-            </form>
-          )}
+        <div className="surface-card" style={{ padding: 28, display: 'grid', gap: 18 }}>
+          <span className="marketing-eyebrow">Fastest response</span>
+          <h2 style={{ margin: 0 }}>Talk to Teadustech directly.</h2>
+          <p className="muted" style={{ margin: 0 }}>
+            The contact form is hidden for now. Use email or WhatsApp so every enquiry reaches the owner workflow directly.
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+            <a href={`mailto:${email}`} className="btn-cyan" style={{ textDecoration: 'none' }}>Email Support</a>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ textDecoration: 'none' }}>Message on WhatsApp</a>
+          </div>
         </div>
       </div>
     </MarketingShell>

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AuraGen | Automated High-Fidelity Website Demo Platform",
-  description: "Get your personalized website demo in 60 seconds. Powered by AuraGen.",
+  title: "Teadustech SiteSpark | Website Demos in 60 Seconds",
+  description: "Create a personalized website demo in 60 seconds with Teadustech SiteSpark.",
 };
 
 export default function RootLayout({
