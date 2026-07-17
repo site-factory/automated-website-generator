@@ -33,6 +33,9 @@ interface FormData {
   activePalette: Palette | null;
   mood: string;
   businessName: string;
+  businessPhone: string;
+  businessEmail: string;
+  businessLocation: string;
   email: string;
 }
 
@@ -41,6 +44,21 @@ interface GenerationResult {
   repoUrl: string | null;
   repoName: string | null;
   leadId: string | null;
+}
+
+interface AiBrief {
+  businessName: string;
+  industry: string;
+  templateStyle: string;
+  mood: string;
+  paletteName: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  bgTint: string;
+  businessPhone?: string;
+  businessEmail?: string;
+  businessLocation?: string;
 }
 
 export default function Wizard() {
@@ -55,6 +73,9 @@ export default function Wizard() {
     activePalette: null,
     mood: '',
     businessName: '',
+    businessPhone: '',
+    businessEmail: '',
+    businessLocation: '',
     email: '',
   });
   const [extracting, setExtracting] = useState(false);
@@ -63,6 +84,11 @@ export default function Wizard() {
   const [finalUrl, setFinalUrl] = useState<string | null>(null);
   const [generationResult, setGenerationResult] = useState<GenerationResult | null>(null);
   const [copied, setCopied] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiBrief, setAiBrief] = useState<AiBrief | null>(null);
+  const [aiProvider, setAiProvider] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const steps = [
@@ -120,6 +146,62 @@ export default function Wizard() {
     { id: 'authority', label: 'The Authority', desc: 'Trust-focused, structured layouts, data-driven' },
     { id: 'friendly', label: 'The Friendly Pro', desc: 'Warm, approachable, heavy on social proof' },
   ];
+
+  const paletteFromBrief = (brief: AiBrief): Palette => {
+    const existingPalette = palettes.find((palette) => palette.name.toLowerCase() === brief.paletteName.toLowerCase());
+    if (existingPalette) return existingPalette;
+
+    return {
+      id: 'ai-generated',
+      name: brief.paletteName || 'AI Suggested Palette',
+      colors: [brief.primaryColor, brief.secondaryColor, brief.accentColor, brief.bgTint],
+    };
+  };
+
+  const generateWebsiteBrief = async () => {
+    setAiLoading(true);
+    setAiError('');
+    setAiBrief(null);
+    setAiProvider(null);
+
+    try {
+      const res = await fetch('/api/ai/brief', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: aiPrompt }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setAiError(data.error || 'AI brief generation failed. Use the manual wizard instead.');
+        return;
+      }
+
+      setAiBrief(data.brief);
+      setAiProvider(data.provider || null);
+    } catch {
+      setAiError('AI brief generation failed. Use the manual wizard instead.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const applyAiBrief = () => {
+    if (!aiBrief) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      businessName: aiBrief.businessName || prev.businessName,
+      industry: aiBrief.industry || prev.industry,
+      templateStyle: aiBrief.templateStyle || prev.templateStyle,
+      mood: aiBrief.mood || prev.mood,
+      activePalette: paletteFromBrief(aiBrief),
+      businessPhone: aiBrief.businessPhone || prev.businessPhone,
+      businessEmail: aiBrief.businessEmail || prev.businessEmail,
+      businessLocation: aiBrief.businessLocation || prev.businessLocation,
+    }));
+    setStep(1);
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -409,6 +491,45 @@ export default function Wizard() {
 
       {/* Main Content Area */}
       <div className="flex-1 min-w-0 w-full p-4 sm:p-8 md:px-16 md:py-12">
+        <section className="ai-brief-panel">
+          <div className="ai-brief-copy">
+            <span>AI assist</span>
+            <h2>Describe your business and let AI prepare the website brief.</h2>
+            <p>Review the result before generating. If AI is unavailable, the manual wizard still works.</p>
+          </div>
+          <div className="ai-brief-input">
+            <textarea
+              value={aiPrompt}
+              maxLength={1000}
+              onChange={(event) => setAiPrompt(event.target.value)}
+              placeholder="Example: I run a beauty salon in Pune called Mirrors. We do hair styling, bridal makeup, facials, and want WhatsApp bookings."
+            />
+            <div className="ai-brief-actions">
+              <button
+                type="button"
+                className="btn-cyan"
+                disabled={aiLoading || aiPrompt.trim().length < 12}
+                onClick={generateWebsiteBrief}
+              >
+                {aiLoading ? 'Generating brief...' : 'Generate Website Brief'}
+              </button>
+              <small>{aiPrompt.length}/1000</small>
+            </div>
+            {aiError ? <p className="ai-brief-error">{aiError}</p> : null}
+            {aiBrief ? (
+              <div className="ai-brief-result">
+                <div>
+                  <strong>{aiBrief.businessName}</strong>
+                  <span>{aiBrief.industry} • {aiBrief.templateStyle} • {aiBrief.mood}</span>
+                  {aiProvider ? <span>Provider: {aiProvider}</span> : null}
+                </div>
+                <button type="button" className="success-secondary-btn" onClick={applyAiBrief}>
+                  Apply to Wizard
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </section>
 
         {/* Stepper */}
         <div className="scrollbar-hide" style={{ display: "flex", justifyContent: "center", overflowX: "auto", gap: "12px", marginBottom: "40px", paddingBottom: "8px" }}>
@@ -730,6 +851,36 @@ export default function Wizard() {
                     onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="business-contact-grid">
+              <div>
+                <label>Business phone</label>
+                <input
+                  type="text"
+                  placeholder="Phone or WhatsApp number"
+                  value={formData.businessPhone}
+                  onChange={(event) => setFormData(prev => ({ ...prev, businessPhone: event.target.value }))}
+                />
+              </div>
+              <div>
+                <label>Business email</label>
+                <input
+                  type="email"
+                  placeholder="hello@business.com"
+                  value={formData.businessEmail}
+                  onChange={(event) => setFormData(prev => ({ ...prev, businessEmail: event.target.value }))}
+                />
+              </div>
+              <div>
+                <label>Business location</label>
+                <input
+                  type="text"
+                  placeholder="City or full address"
+                  value={formData.businessLocation}
+                  onChange={(event) => setFormData(prev => ({ ...prev, businessLocation: event.target.value }))}
+                />
               </div>
             </div>
           </div>

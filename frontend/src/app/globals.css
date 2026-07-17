@@ -557,6 +557,122 @@ body {
   font-size: 0.82rem;
 }
 
+.ai-brief-panel {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.85fr) minmax(280px, 1.15fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(0, 163, 141, 0.12), transparent 32%),
+    #ffffff;
+}
+
+.ai-brief-copy span {
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ai-brief-copy h2 {
+  margin: 0.55rem 0;
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  line-height: 1.15;
+}
+
+.ai-brief-copy p {
+  color: var(--text-body);
+  line-height: 1.6;
+}
+
+.ai-brief-input {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.ai-brief-input textarea {
+  width: 100%;
+  min-height: 128px;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  color: var(--text-main);
+  background: #fff;
+  font: inherit;
+  line-height: 1.6;
+}
+
+.ai-brief-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ai-brief-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.ai-brief-actions small,
+.ai-brief-result span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.ai-brief-error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+.ai-brief-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--background-secondary);
+}
+
+.ai-brief-result div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.business-contact-grid {
+  max-width: 760px;
+  margin: 2rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.9rem;
+}
+
+.business-contact-grid label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+}
+
+.business-contact-grid input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.9rem;
+  color: var(--text-main);
+  background: #fff;
+  font: inherit;
+}
+
 .industry-landing-hero {
   width: min(1120px, calc(100% - 32px));
   margin: 0 auto;
@@ -877,6 +993,16 @@ body {
   }
 
   .success-actions {
+    flex-direction: column;
+  }
+
+  .ai-brief-panel,
+  .business-contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-brief-result {
+    align-items: stretch;
     flex-direction: column;
   }
 }
