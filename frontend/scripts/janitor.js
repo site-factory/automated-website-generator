@@ -1,9 +1,9 @@
-const RETENTION_DAYS = Number(process.env.RETENTION_DAYS || 30);
+const RETENTION_DAYS = Number(process.env.RETENTION_DAYS || 15);
 const GITHUB_ORG = process.env.GITHUB_ORG || 'site-factory';
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GENERATED_REPO_TOPIC = 'aisitespark-demo';
+const DRY_RUN = process.env.JANITOR_DRY_RUN === 'true';
 
 function assertConfig() {
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -12,15 +12,19 @@ function assertConfig() {
     if (!GITHUB_TOKEN) {
         throw new Error('GITHUB_TOKEN is required for janitor cleanup');
     }
+    if (!Number.isFinite(RETENTION_DAYS) || RETENTION_DAYS < 1) {
+        throw new Error('RETENTION_DAYS must be a positive number');
+    }
 }
 
 async function fetchExpiredLeads() {
     const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
     const query = new URLSearchParams({
-        select: 'id,status,github_repo_name,github_repo_id,created_at,cleanup_status',
+        select: 'id,status,github_repo_name,github_repo_url,github_repo_id,demo_id,created_at,cleanup_status',
         status: 'neq.converted',
         created_at: `lt.${cutoff}`,
         github_repo_name: 'not.is.null',
+        github_repo_id: 'not.is.null',
         cleanup_status: 'eq.active',
     });
 
@@ -78,20 +82,9 @@ async function fetchRepo(repoName) {
     return res.json();
 }
 
-async function fetchRepoTopics(repoName) {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_ORG}/${repoName}/topics`, {
-        headers: githubHeaders(),
-    });
-
-    if (!res.ok) {
-        throw new Error(`GitHub topic lookup failed for ${repoName}: ${res.status} ${await res.text()}`);
-    }
-
-    const data = await res.json();
-    return Array.isArray(data.names) ? data.names : [];
-}
-
 async function deleteRepo(repoName) {
+    if (DRY_RUN) return 'dry-run';
+
     const res = await fetch(`https://api.github.com/repos/${GITHUB_ORG}/${repoName}`, {
         method: 'DELETE',
         headers: githubHeaders(),
@@ -122,10 +115,9 @@ async function cleanupLead(lead) {
         return { status: 'skipped', reason: `repo id mismatch: expected ${expectedRepoId}, found ${repo.id}`, repoName };
     }
 
-    const topics = await fetchRepoTopics(repoName);
-    if (!topics.includes(GENERATED_REPO_TOPIC)) {
+    if (repo.owner?.login !== GITHUB_ORG || repo.name !== repoName) {
         await supabasePatchLead(lead.id, { cleanup_status: 'skipped' });
-        return { status: 'skipped', reason: `missing ${GENERATED_REPO_TOPIC} topic`, repoName };
+        return { status: 'skipped', reason: 'repo owner or name mismatch', repoName };
     }
 
     const result = await deleteRepo(repoName);
@@ -135,13 +127,18 @@ async function cleanupLead(lead) {
         return { status: 'deleted', reason: 'deleted', repoName };
     }
 
+    if (result === 'dry-run') {
+        return { status: 'skipped', reason: 'dry run enabled', repoName };
+    }
+
     await supabasePatchLead(lead.id, { cleanup_status: 'skipped', deleted_at: now });
     return { status: 'skipped', reason: 'repo disappeared before delete', repoName };
 }
 
 async function cleanupOldDemos() {
     assertConfig();
-    console.log(`Starting janitor cleanup for non-converted demos older than ${RETENTION_DAYS} days...`);
+    console.log(`Starting janitor cleanup for active, non-converted demos older than ${RETENTION_DAYS} days in ${GITHUB_ORG}...`);
+    if (DRY_RUN) console.log('JANITOR_DRY_RUN=true; repositories will not be deleted.');
 
     const leads = await fetchExpiredLeads();
     let deleted = 0;
@@ -179,4 +176,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { cleanupOldDemos, fetchExpiredLeads, fetchRepo, fetchRepoTopics, deleteRepo, cleanupLead };
+module.exports = { cleanupOldDemos, fetchExpiredLeads, fetchRepo, deleteRepo, cleanupLead };

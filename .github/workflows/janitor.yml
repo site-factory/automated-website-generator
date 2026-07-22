@@ -1,0 +1,30 @@
+name: Demo Repo Janitor
+
+on:
+  schedule:
+    # 00:00 IST daily.
+    - cron: "30 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  cleanup-demo-repos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Delete expired non-converted demo repos
+        working-directory: frontend
+        run: node scripts/janitor.js
+        env:
+          RETENTION_DAYS: "15"
+          GITHUB_ORG: ${{ secrets.GENERATED_DEMO_GITHUB_ORG || 'site-factory' }}
+          GITHUB_TOKEN: ${{ secrets.GENERATED_DEMO_REPO_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
